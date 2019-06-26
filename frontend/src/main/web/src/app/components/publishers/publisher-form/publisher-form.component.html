@@ -1,0 +1,11 @@
+<div class="container">
+  <h4>New Author</h4>
+  <form (ngSubmit)="onSubmit()" #authorForm="ngForm">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" name="name" required
+             [(ngModel)]="publisher.name">
+    </div>
+    <button type="submit" clas="btn btn-success" [disabled]="!authorForm.form.valid">Submit</button>
+  </form>
+</div>

@@ -1,0 +1,66 @@
+<div class="card my-5">
+  <div class="card-body">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" formControlName="nameControl" required
+               class="form-control" id="name" placeholder="Enter name of book">
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" formControlName="descriptionControl"
+               class="form-control" id="description" placeholder="Enter description of book">
+      </div>
+
+      <div formArrayName="authorControl">
+
+        <div *ngFor="let address of authors.controls; let i=index">
+          <!-- The repeated author template -->
+
+          <label>
+            Author:
+            <input type="number" [formControlName]="i"
+            class="form-control" placeholder="Enter author id">
+            <button type="button" class="btn btn-add" (click)="addAuthor(i)">Add Author</button>
+          </label>
+        </div>
+      </div>
+
+<!--      TODO(make publish date Date type)-->
+      <div class="form-group">
+        <label for="publishDate">Date publishing</label>
+        <input type="text"  formControlName="publishDateControl" required
+               class="form-control" id="publishDate" placeholder="Enter date publishing of book">
+      </div>
+
+      <div class="form-group">
+        <label for="publisher">Publisher</label>
+        <input type="number" formControlName="publisherIdControl" required
+               class="form-control" id="publisher" placeholder="Enter publisher of book">
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price of book</label>
+        <input type="number" formControlName="priceControl" required
+               class="form-control" id="price" placeholder="Enter price of book">
+      </div>
+
+<!--      TODO(make list of categories)-->
+      <div class="form-group">
+        <label for="category">Category</label>
+        <input type="number" formControlName="categoryControl" required
+               class="form-control" id="category" placeholder="Enter category of book">
+      </div>
+
+      <p>
+        Value {{bookRequest | json}}
+      </p>
+      <p>
+        Form status{{form.status}}
+      </p>
+
+      <button type="submit" (click)="onSubmit()" [disabled]="!form.valid" class="btn btn-info">Submit</button>
+    </form>
+  </div>
+</div>

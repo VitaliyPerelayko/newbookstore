@@ -1,0 +1,15 @@
+<h2>Details</h2>
+<div class="container">
+  <div class="card bg-light my-5">
+    <div *ngIf="author">
+      <h4 class="jasmine-banner">id  {{ author.id }}</h4>
+      <h3 class="jasmine-title">{{ author.name }}</h3>
+      <h5 class="jasmine-spec">Birth date {{ author.birthDate }}</h5>
+      <p>Biography</p>
+      <p class="jasmine-description"> {{ author.bio }}</p>
+
+      <button type="button" (click)="deleteAuthor()">Delete book</button>
+      <button type="button" (click)="updateAuthor()">Update book</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<div class="card my-5">
+  <div class="card-body">
+    <h2>Publishers</h2>
+    <div class="jasmine-title" *ngFor="let publisher of publishers; trackBy: trackById">
+      <h4>Id {{publisher.id}}</h4>
+      <h3>
+        {{ publisher.name }}
+      </h3>
+      <button type="button" (click)="deletePublisher(publisher.id)">Delete Publisher</button>
+      <button type="button" (click)="updatePublisher(publisher.id)">Update Publisher</button>
+    </div>
+  </div>
+</div>

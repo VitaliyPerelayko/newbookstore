@@ -1,0 +1,19 @@
+<div class="card my-5">
+  <div class="card-body">
+    <h2>Books</h2>
+
+      <div class="jasmine-title" *ngFor="let book of books; trackBy: trackById">
+        <h3>
+          <a [title]="book.category + '    ' + book.name + '  details'"
+            [routerLink]="['books/', book.id]">
+            {{ book.name }}
+          </a>
+        </h3>
+
+        <p class="jasmine-description" *ngIf="book.description">
+          Description: {{ book.description }}
+        </p>
+      </div>
+
+  </div>
+</div>

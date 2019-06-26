@@ -1,0 +1,19 @@
+<h2>Details</h2>
+<div class="container">
+  <div class="card bg-light my-5">
+    <div *ngIf="book">
+      <h4 class="jasmine-banner">id  {{ book.id }}</h4>
+      <h3 class="jasmine-title">{{ book.name }}</h3>
+      <p class="jasmine-description">Authors</p>
+      <h4 *ngFor="let author of book.authors" class="jasmine-spec-list">{{ author.name }}</h4>
+      <h4 class="jasmine-banner">{{ book.price | currency }}</h4>
+      <h5 class="jasmine-spec">publisher {{ book.publisher.name }}</h5>
+      <h5 class="jasmine-spec">{{ book.publishDate }}</h5>
+      <p class="jasmine-description"> {{  book.description }}</p>
+
+      <!--  TODO(add button Buy and cart)-->
+      <button type="button" (click)="deleteBook()">Delete book</button>
+      <button type="button" (click)="updateBook()">Update book</button>
+    </div>
+  </div>
+</div>
