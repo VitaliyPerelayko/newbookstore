@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
  * Controller for entity Book.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/authors")
 public class AuthorController {
 

@@ -13,7 +13,7 @@
 
     <properties>
         <frontend-maven-plugin>1.7.6</frontend-maven-plugin>
-        <nodeVersion>v8.11.3</nodeVersion>
+        <nodeVersion>v10.16.0</nodeVersion>
     </properties>
 
     <build>

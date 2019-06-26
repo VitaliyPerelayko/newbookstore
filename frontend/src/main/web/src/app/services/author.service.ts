@@ -15,7 +15,7 @@ export class AuthorService {
     private http: HttpClient,
     private route: Router
     ) {
-    this.authorURL = 'http://localhost:8080/bookstore_war/authors';
+    this.authorURL = 'http://localhost:8080/bookstore/authors';
   }
 
   findAll(): Observable<Author[]> {

@@ -84,7 +84,7 @@ public class DatabaseConfiguration {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         localContainerEntityManagerFactoryBean.setDataSource(dataSource());
-        localContainerEntityManagerFactoryBean.setPackagesToScan("com.com.intexsoft.dao.model");
+        localContainerEntityManagerFactoryBean.setPackagesToScan("com.intexsoft.dao.model");
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         localContainerEntityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
         localContainerEntityManagerFactoryBean.setJpaProperties(additionalProperties());

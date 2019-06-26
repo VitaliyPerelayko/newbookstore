@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
  * Controller for Publisher entity
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/publishers")
 public class PublisherController {
 

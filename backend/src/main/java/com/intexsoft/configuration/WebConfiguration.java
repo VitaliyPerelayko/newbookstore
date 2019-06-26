@@ -11,13 +11,15 @@ import org.dozer.loader.api.BeanMappingBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Web Configuration
  */
 @Configuration
 @EnableWebMvc
-public class WebConfiguration {
+public class WebConfiguration implements WebMvcConfigurer {
     /**
      * @return Dozer mapper
      */
@@ -36,5 +38,12 @@ public class WebConfiguration {
         DozerBeanMapper mapper = new DozerBeanMapper();
         mapper.addMapping(builder);
         return mapper;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry resourceHandlerRegistry){
+        resourceHandlerRegistry.
+                addResourceHandler("/").
+                addResourceLocations("resources");
     }
 }

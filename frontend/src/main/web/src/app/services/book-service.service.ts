@@ -17,7 +17,7 @@ export class BookServiceService {
     private http: HttpClient,
     private router: Router
 ) {
-    this.booksURL = 'http://localhost:8080/bookstore_war/books';
+    this.booksURL = 'http://localhost:8080/bookstore/books';
   }
 
   public findAll(): Observable<BookShort[]> {

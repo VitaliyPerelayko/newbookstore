@@ -15,7 +15,7 @@ export class PublisherService {
     private http: HttpClient,
     private roter: Router
   ) {
-    this.publisherURL = 'http://localhost:8080/bookstore_war/publishers';
+    this.publisherURL = 'http://localhost:8080/bookstore/publishers';
   }
 
   findAll(): Observable<Publisher[]> {
