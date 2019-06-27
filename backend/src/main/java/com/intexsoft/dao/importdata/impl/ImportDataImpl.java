@@ -74,7 +74,7 @@ public class ImportDataImpl {
             Author author = new Author();
             author.setName(node.valueOf("@name"));
             author.setBio(node.valueOf("@bio"));
-            author.setBirthDate(LocalDate.parse(parseString(node.asXML()).selectSingleNode("/birthDate").getText()));
+            author.setBirthDate(LocalDate.parse(node.selectSingleNode(".//birthDate").getText()));
             authorService.save(author);
             authorList.add(author);
         });
@@ -102,16 +102,6 @@ public class ImportDataImpl {
         } catch (DocumentException e) {
 //            TODO: Handle exception ()
             throw new RuntimeException(e);
-        }
-        return document;
-    }
-
-    private Document parseString(String text){
-        Document document = null;
-        try {
-            document = DocumentHelper.parseText(text);
-        } catch (DocumentException e) {
-            e.printStackTrace();
         }
         return document;
     }
