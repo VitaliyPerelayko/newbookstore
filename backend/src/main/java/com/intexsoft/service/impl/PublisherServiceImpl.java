@@ -48,6 +48,18 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     /**
+     * find publisher by the given name
+     *
+     * @param name name of publisher
+     * @return publisher with the given name
+     */
+    @Override
+    public Publisher findByName(String name){
+        validate(!publisherRepository.existsByName(name),"error.publisher.name.notExist");
+        return publisherRepository.findPublisherByName(name);
+    }
+
+    /**
      * Save new entity Publisher.
      *
      * @param publisher publisher entity

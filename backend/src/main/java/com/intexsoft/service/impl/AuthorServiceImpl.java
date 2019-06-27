@@ -47,6 +47,18 @@ public class AuthorServiceImpl implements AuthorService {
         return author.get();
     }
 
+    /**
+     * find author by the given name
+     *
+     * @param name name of author
+     * @return author with the given name
+     */
+    @Override
+    public Author findByName(String name){
+        validate(!authorRepository.existsByName(name),"error.author.name.notExist");
+        return authorRepository.findAuthorByName(name);
+    }
+
 
     /**
      * Save new entity Author.

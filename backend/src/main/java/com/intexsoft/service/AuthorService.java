@@ -14,6 +14,8 @@ public interface AuthorService {
 
     Author findById(Long id);
 
+    Author findByName(String name);
+
     @Transactional
     Author save(Author author);
 

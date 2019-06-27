@@ -9,6 +9,8 @@ public interface PublisherService {
 
     Publisher findById(Long id);
 
+    Publisher findByName(String name);
+
     Publisher save(Publisher publisher);
 
     Publisher update(Publisher publisher);
