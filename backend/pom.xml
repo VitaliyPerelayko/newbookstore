@@ -28,11 +28,11 @@
         <hibernate.validator>6.0.17.Final</hibernate.validator>
         <mysql.conector.java>8.0.16</mysql.conector.java>
         <flyway-core>5.2.4</flyway-core>
+        <dom4j>2.1.1</dom4j>
 
         <dozer>5.5.1</dozer>
         <jackson.core>2.9.8</jackson.core>
 
-        <lombok>1.18.8</lombok>
 
         <!-- Plugins -->
         <flyway>5.2.4</flyway>
@@ -110,6 +110,13 @@
             <groupId>net.sf.dozer</groupId>
             <artifactId>dozer</artifactId>
             <version>${dozer}</version>
+        </dependency>
+
+        <!-- XML parser -->
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>${dom4j}</version>
         </dependency>
 
         <!-- frontend -->

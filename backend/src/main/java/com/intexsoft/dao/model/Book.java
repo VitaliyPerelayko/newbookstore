@@ -5,9 +5,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "book")
 public class Book {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,6 +17,7 @@ public class Book {
     private String name;
 
     private String description;
+
 
     @ManyToMany()
     @JoinTable(name = "book_has_author",
