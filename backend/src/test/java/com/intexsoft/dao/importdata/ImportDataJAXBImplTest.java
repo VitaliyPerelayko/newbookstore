@@ -1,33 +1,28 @@
 package com.intexsoft.dao.importdata;
 
-import com.intexsoft.dao.importdata.impl.ImportDataImpl;
+import com.intexsoft.dao.importdata.impl.ImportDataJAXBImpl;
+import com.intexsoft.dao.importdata.pojo.Data;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Publisher;
 import com.intexsoft.service.AuthorService;
 import com.intexsoft.service.BookService;
 import com.intexsoft.service.PublisherService;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+
 @ExtendWith(MockitoExtension.class)
-public class ImportDataImplTest {
+public class ImportDataJAXBImplTest {
 
     @InjectMocks
-    private ImportDataImpl importData;
+    private ImportDataJAXBImpl importData;
 
     @Mock
     private PublisherService publisherService;
@@ -39,26 +34,32 @@ public class ImportDataImplTest {
     private BookService bookService;
 
     @Test
-    public void testSavePublishers() {
+    public void testData() {
         Publisher publisher = new Publisher();
         when(publisherService.save(any(Publisher.class))).thenReturn(publisher);
-        List<String> publisherNames = importData.savePublishers().stream().map(Publisher::getName).collect(Collectors.toList());
-        assertEquals(publisherNames, Arrays.asList("AST", "ABS", "AKG", "AMG"));
-        System.out.println(publisherNames);
-    }
-
-    @Test
-    public void testSaveAuthors() {
         Author author = new Author();
         when(authorService.save(any(Author.class))).thenReturn(author);
-        System.out.println(importData.saveAuthors().stream().map(Author::getBirthDate).collect(Collectors.toList()));
-    }
-
-    @Test
-    public void testSaveBooks() {
         Book book = new Book();
         when(bookService.save(any(Book.class))).thenReturn(book);
-        System.out.println(importData.saveBooks().stream().map(Book::getCategory).collect(Collectors.toList()));
-    }
 
+
+        importData.saveAuthors().forEach(author1 -> {
+            System.out.println(author1.getName());
+            System.out.println(author1.getBio());
+            System.out.println(author1.getBirthDate());
+        });
+
+        importData.saveBooks().forEach(book1 -> {
+            System.out.println(book1.getName());
+            System.out.println(book1.getCategory());
+            System.out.println(book1.getDescription());
+            System.out.println(book1.getPublisher());
+            System.out.println(book1.getPrice());
+            System.out.println(book1.getPublishDate());
+            book1.getAuthors().forEach(System.out::println);
+        });
+
+        importData.savePublishers().forEach(publisher1 ->
+                System.out.println(publisher1.getName()));
+    }
 }

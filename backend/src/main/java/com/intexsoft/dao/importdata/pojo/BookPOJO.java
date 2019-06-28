@@ -1,50 +1,39 @@
-package com.intexsoft.dao.model;
+package com.intexsoft.dao.importdata.pojo;
 
-import javax.persistence.*;
+import com.intexsoft.dao.importdata.impl.adapters.CategotyAdapter;
+import com.intexsoft.dao.importdata.impl.adapters.LocalDateAdapter;
+import com.intexsoft.dao.model.Category;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
-@Entity
-@Table(name = "book")
-public class Book {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@XmlRootElement(name = "book")
+public class BookPOJO {
 
     private String name;
 
     private String description;
 
-    @ManyToMany()
-    @JoinTable(name = "book_has_author",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private Set<Author> authors;
+    private List<String> authors;
 
     private LocalDate publishDate;
 
-    @ManyToOne
-    @JoinColumn(name = "publisher", referencedColumnName = "id")
-    private Publisher publisher;
+    private String publisher;
 
     private BigDecimal price;
 
     private Category category;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
+    @XmlElement(name = "title")
     public void setName(String name) {
         this.name = name;
     }
@@ -53,15 +42,18 @@ public class Book {
         return description;
     }
 
+    @XmlElement
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public Set<Author> getAuthors() {
+    public List<String> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(Set<Author> authors) {
+    @XmlElementWrapper(name = "authors")
+    @XmlElement(name = "name")
+    public void setAuthors(List<String> authors) {
         this.authors = authors;
     }
 
@@ -69,15 +61,18 @@ public class Book {
         return publishDate;
     }
 
+    @XmlElement
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     public void setPublishDate(LocalDate publishDate) {
         this.publishDate = publishDate;
     }
 
-    public Publisher getPublisher() {
+    public String getPublisher() {
         return publisher;
     }
 
-    public void setPublisher(Publisher publisher) {
+    @XmlElement
+    public void setPublisher(String publisher) {
         this.publisher = publisher;
     }
 
@@ -85,6 +80,7 @@ public class Book {
         return price;
     }
 
+    @XmlElement
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
@@ -93,6 +89,8 @@ public class Book {
         return category;
     }
 
+    @XmlElement
+    @XmlJavaTypeAdapter(CategotyAdapter.class)
     public void setCategory(Category category) {
         this.category = category;
     }

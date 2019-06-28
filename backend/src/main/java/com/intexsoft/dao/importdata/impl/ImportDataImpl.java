@@ -1,5 +1,6 @@
 package com.intexsoft.dao.importdata.impl;
 
+import com.intexsoft.dao.importdata.ImportData;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Category;
@@ -11,7 +12,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -25,14 +25,13 @@ import java.util.stream.Collectors;
  * Service imports test data from xml file
  */
 @Service
-public class ImportDataImpl {
+public class ImportDataImpl implements ImportData {
 
     private final BookService bookService;
     private final AuthorService authorService;
     private final PublisherService publisherService;
-    private final Document document = getDocument("/home/INTEXSOFT/vitaly.perelaiko/IdeaProjects/firstProject/newbookstore/backend/src/main/resources/datafordb/data.xml");
-    @Value("${fileXML}")
-    private String PATH;
+    private final Document document = getDocument();
+
 
     public ImportDataImpl(BookService bookService, AuthorService authorService, PublisherService publisherService) {
         this.bookService = bookService;
@@ -43,13 +42,19 @@ public class ImportDataImpl {
     /**
      * save data from xml to database
      */
+    @Override
     public void saveData() {
         savePublishers();
         saveAuthors();
         saveBooks();
     }
 
-
+    /**
+     * save data from xml to Database for entity Author
+     *
+     * @return list of Author
+     */
+    @Override
     public List<Author> saveAuthors() {
         List<Node> listAuthors = document.selectNodes("/data/authors/author");
         List<Author> authorList = new ArrayList<>();
@@ -65,6 +70,12 @@ public class ImportDataImpl {
         return authorList;
     }
 
+    /**
+     * save data from xml to Database for entity Book
+     *
+     * @return list of Book
+     */
+    @Override
     public List<Book> saveBooks() {
         List<Node> listBooks = document.selectNodes("/data/books/book");
         List<Book> bookList = new ArrayList<>();
@@ -86,6 +97,12 @@ public class ImportDataImpl {
         return bookList;
     }
 
+    /**
+     * save data from xml to Database for entity Publisher
+     *
+     * @return list of Publisher
+     */
+    @Override
     public List<Publisher> savePublishers() {
         List<Node> listPublishers = document.selectNodes("/data/publishers/publisher/name");
         List<Publisher> publisherList = new ArrayList<>();
@@ -99,11 +116,11 @@ public class ImportDataImpl {
         return publisherList;
     }
 
-    public Document getDocument(String path) {
+    private Document getDocument() {
         SAXReader reader = new SAXReader();
         Document document;
         try {
-            document = reader.read(new File(path));
+            document = reader.read(new File(getClass().getResource("/datafordb/data.xml").getPath()));
         } catch (DocumentException e) {
 //            TODO: Handle exception ()
             throw new RuntimeException(e);

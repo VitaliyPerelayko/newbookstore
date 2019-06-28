@@ -158,6 +158,12 @@
             <version>${mockito}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.spring.core}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
