@@ -52,9 +52,9 @@ public class DatabaseConfiguration {
      *
      * @return FlyWay
      */
-    @Bean(initMethod = "migrate")
-    public Flyway flyway(){
-        return Flyway.configure().dataSource(dataSource()).load();
+    @Bean
+    public int flyway(){
+        return Flyway.configure().dataSource(dataSource()).load().migrate();
     }
 
     /**
