@@ -13,6 +13,8 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String code;
+
     private String name;
 
     private String description;
@@ -33,12 +35,34 @@ public class Book {
 
     private Category category;
 
+    public Book(String code, String name, String description, Set<Author> authors, LocalDate publishDate, Publisher publisher, BigDecimal price, Category category) {
+        this.code = code;
+        this.name = name;
+        this.description = description;
+        this.authors = authors;
+        this.publishDate = publishDate;
+        this.publisher = publisher;
+        this.price = price;
+        this.category = category;
+    }
+
+    public Book() {
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {

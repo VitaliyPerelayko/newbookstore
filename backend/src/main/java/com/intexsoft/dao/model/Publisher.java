@@ -18,6 +18,13 @@ public class Publisher {
     @OneToMany(mappedBy = "publisher")
     private Set<Book> bookSet;
 
+    public Publisher(String name) {
+        this.name = name;
+    }
+
+    public Publisher() {
+    }
+
     public Long getId() {
         return id;
     }

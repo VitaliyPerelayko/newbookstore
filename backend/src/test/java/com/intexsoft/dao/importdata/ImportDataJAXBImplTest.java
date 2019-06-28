@@ -1,7 +1,6 @@
 package com.intexsoft.dao.importdata;
 
 import com.intexsoft.dao.importdata.impl.ImportDataJAXBImpl;
-import com.intexsoft.dao.importdata.pojo.Data;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Publisher;
@@ -32,6 +31,8 @@ public class ImportDataJAXBImplTest {
 
     @Mock
     private BookService bookService;
+
+    //TODO: make tests with asserts
 
     @Test
     public void testData() {

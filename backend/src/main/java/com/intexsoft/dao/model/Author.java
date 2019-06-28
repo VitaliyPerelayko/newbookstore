@@ -19,6 +19,15 @@ public class Author {
 
     private LocalDate birthDate;
 
+    public Author(String name, String bio, LocalDate birthDate) {
+        this.name = name;
+        this.bio = bio;
+        this.birthDate = birthDate;
+    }
+
+    public Author() {
+    }
+
     @ManyToMany(mappedBy = "authors")
     private Set<Book> books;
 

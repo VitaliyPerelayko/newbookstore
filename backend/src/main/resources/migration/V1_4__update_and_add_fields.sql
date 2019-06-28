@@ -1,0 +1,9 @@
+USE books;
+
+ALTER TABLE book
+MODIFY COLUMN category VARCHAR(15);
+
+ALTER TABLE author ADD UNIQUE (name);
+ALTER TABLE publisher ADD UNIQUE (name);
+
+ALTER TABLE book ADD code VARCHAR(20) UNIQUE;

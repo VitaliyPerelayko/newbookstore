@@ -1,5 +1,0 @@
-USE books;
-
-ALTER TABLE book
-MODIFY COLUMN category VARCHAR(15);
-
