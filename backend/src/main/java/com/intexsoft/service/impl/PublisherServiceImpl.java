@@ -60,6 +60,15 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     /**
+     * @param name name of publisher
+     * @return true if publisher exist in database and false otherwise
+     */
+    @Override
+    public boolean existByName(String name){
+        return publisherRepository.existsByName(name);
+    }
+
+    /**
      * Save new entity Publisher.
      *
      * @param publisher publisher entity

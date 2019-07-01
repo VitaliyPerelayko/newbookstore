@@ -44,9 +44,12 @@ public class ImportDataJAXBImpl implements ImportData {
     public List<Author> saveAuthors() {
         List<Author> authorList = new ArrayList<>();
         data.getAuthorsList().forEach(authorPOJO -> {
+            if (authorService.existByName(authorPOJO.getName())){
+              return;
+            }
             Author author = new Author();
             author.setName(authorPOJO.getName());
-            author.setBio(authorPOJO.getName());
+            author.setBio(authorPOJO.getBio());
             author.setBirthDate(authorPOJO.getBirthDate());
             authorService.save(author);
             authorList.add(author);
@@ -58,6 +61,9 @@ public class ImportDataJAXBImpl implements ImportData {
     public List<Book> saveBooks() {
         List<Book> bookList = new ArrayList<>();
         data.getBooksList().forEach(bookPOJO -> {
+            if (bookService.existByCode(bookPOJO.getCode())){
+                return;
+            }
             Book book = fillBook(bookPOJO);
             bookService.save(book);
             bookList.add(book);
@@ -69,6 +75,9 @@ public class ImportDataJAXBImpl implements ImportData {
     public List<Publisher> savePublishers() {
         List<Publisher> publisherList = new ArrayList<>();
         data.getPublishersList().forEach(publisherPOJO -> {
+            if (publisherService.existByName(publisherPOJO.getName())){
+                return;
+            }
             Publisher publisher = new Publisher();
             publisher.setName(publisherPOJO.getName());
             publisherService.save(publisher);

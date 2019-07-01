@@ -31,7 +31,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findAllOrderedByDate();
 
     /**
-     * @param code code of publisher
+     * @param code code of book
      * @return true if book with the given code exist in database and false otherwise
      */
     boolean existsByCode(String code);

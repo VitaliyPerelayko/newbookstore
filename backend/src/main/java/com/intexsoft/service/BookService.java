@@ -15,6 +15,8 @@ public interface BookService {
 
     Book findByCode(String code);
 
+    boolean existByCode(String code);
+
     @Transactional
     Book save(Book book);
 

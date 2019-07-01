@@ -16,6 +16,8 @@ public interface AuthorService {
 
     Author findByName(String name);
 
+    boolean existByName(String name);
+
     @Transactional
     Author save(Author author);
 

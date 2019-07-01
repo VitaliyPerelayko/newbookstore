@@ -56,6 +56,15 @@ public class BookServiceImpl implements BookService {
     }
 
     /**
+     * @param code code of book
+     * @return true if book with the given code exist in database and false otherwise
+     */
+    @Override
+    public boolean existByCode(String code){
+        return bookRepository.existsByCode(code);
+    }
+
+    /**
      * Save new entity Book.
      *
      * @param book book entity

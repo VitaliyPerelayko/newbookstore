@@ -35,7 +35,8 @@ public class Book {
 
     private Category category;
 
-    public Book(String code, String name, String description, Set<Author> authors, LocalDate publishDate, Publisher publisher, BigDecimal price, Category category) {
+    public Book(String code, String name, String description, Set<Author> authors, LocalDate publishDate,
+                Publisher publisher, BigDecimal price, Category category) {
         this.code = code;
         this.name = name;
         this.description = description;

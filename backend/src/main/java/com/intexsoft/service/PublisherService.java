@@ -11,6 +11,8 @@ public interface PublisherService {
 
     Publisher findByName(String name);
 
+    boolean existByName(String name);
+
     Publisher save(Publisher publisher);
 
     Publisher update(Publisher publisher);
