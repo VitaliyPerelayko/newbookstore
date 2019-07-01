@@ -28,7 +28,6 @@ public class ImportDataJAXBImpl implements ImportData {
     private final BookService bookService;
     private final AuthorService authorService;
     private final PublisherService publisherService;
-    private Data data = unmarshallData();
 
     public ImportDataJAXBImpl(BookService bookService, AuthorService authorService, PublisherService publisherService) {
         this.bookService = bookService;
@@ -43,6 +42,8 @@ public class ImportDataJAXBImpl implements ImportData {
      */
     @Override
     public List<Author> importAuthors() {
+        Data data = unmarshallData();
+
         List<Author> authorList = new ArrayList<>();
         data.getAuthorsList().forEach(authorPOJO -> {
             if (authorService.existByName(authorPOJO.getName())){
@@ -64,6 +65,8 @@ public class ImportDataJAXBImpl implements ImportData {
      */
     @Override
     public List<Book> importBooks() {
+        Data data = unmarshallData();
+
         List<Book> bookList = new ArrayList<>();
         data.getBooksList().forEach(bookPOJO -> {
             if (bookService.existByCode(bookPOJO.getCode())){
@@ -82,6 +85,8 @@ public class ImportDataJAXBImpl implements ImportData {
      */
     @Override
     public List<Publisher> importPublishers() {
+        Data data = unmarshallData();
+
         List<Publisher> publisherList = new ArrayList<>();
         data.getPublishersList().forEach(publisherPOJO -> {
             if (publisherService.existByName(publisherPOJO.getName())){

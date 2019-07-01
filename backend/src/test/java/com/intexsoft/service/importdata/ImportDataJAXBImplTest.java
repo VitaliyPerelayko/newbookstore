@@ -32,7 +32,6 @@ public class ImportDataJAXBImplTest {
 
     @Test
     public void testSavePublishers() {
-        when(publisherService.save(any(Publisher.class))).thenReturn(new Publisher());
         when(publisherService.existByName(any(String.class))).thenReturn(false);
         assertDoesNotThrow(importData::importPublishers);
     }
@@ -40,14 +39,12 @@ public class ImportDataJAXBImplTest {
 
     @Test
     public void testSaveAuthors(){
-        when(authorService.save(any(Author.class))).thenReturn(new Author());
         when(authorService.existByName(any(String.class))).thenReturn(false);
         assertDoesNotThrow(importData::importAuthors);
     }
 
     @Test
     public void testSaveBooks(){
-        when(bookService.save(any(Book.class))).thenReturn(new Book());
         when(bookService.existByCode(any(String.class))).thenReturn(false);
         when(publisherService.findByName(any(String.class))).thenReturn(new Publisher());
         when(authorService.findByName(any(String.class))).thenReturn(new Author());

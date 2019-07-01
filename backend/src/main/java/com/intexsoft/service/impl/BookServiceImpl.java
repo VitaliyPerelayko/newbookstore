@@ -3,6 +3,8 @@ package com.intexsoft.service.impl;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.repository.BookRepository;
 import com.intexsoft.service.BookService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,7 @@ import java.util.List;
 @Service
 public class BookServiceImpl implements BookService {
 
+    private final static Logger LOGGER = LogManager.getLogger(BookServiceImpl.class);
     private final BookRepository bookRepository;
 
     public BookServiceImpl(BookRepository bookRepository) {
@@ -50,7 +53,7 @@ public class BookServiceImpl implements BookService {
      * @return book with the given code
      */
     @Override
-    public Book findByCode(String code){
+    public Book findByCode(String code) {
         validate(!bookRepository.existsByCode(code), "error.book.code.notExist");
         return bookRepository.findBookByCode(code);
     }
@@ -60,7 +63,7 @@ public class BookServiceImpl implements BookService {
      * @return true if book with the given code exist in database and false otherwise
      */
     @Override
-    public boolean existByCode(String code){
+    public boolean existByCode(String code) {
         return bookRepository.existsByCode(code);
     }
 
@@ -88,7 +91,7 @@ public class BookServiceImpl implements BookService {
      */
     @Transactional
     @Override
-    public List<Book> saveAll(List<Book> books){
+    public List<Book> saveAll(List<Book> books) {
         books.forEach(book -> {
             validate(book.getId() != null, "error.book.haveId");
             validate(bookRepository.existsByCode(book.getCode()), "error.book.code.notUnique");
@@ -143,7 +146,9 @@ public class BookServiceImpl implements BookService {
 
     private void validate(boolean expression, String errorMessage) {
         if (expression) {
-            throw new RuntimeException(errorMessage);
+            RuntimeException e = new RuntimeException(errorMessage);
+            LOGGER.error(e);
+            throw e;
         }
     }
 

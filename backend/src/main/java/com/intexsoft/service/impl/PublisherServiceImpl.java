@@ -3,6 +3,8 @@ package com.intexsoft.service.impl;
 import com.intexsoft.dao.model.Publisher;
 import com.intexsoft.dao.repository.PublisherRepository;
 import com.intexsoft.service.PublisherService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +17,7 @@ import java.util.Optional;
 @Service
 public class PublisherServiceImpl implements PublisherService {
 
-
+    private final static Logger LOGGER = LogManager.getLogger(AuthorServiceImpl.class);
     private final PublisherRepository publisherRepository;
 
     public PublisherServiceImpl(PublisherRepository publisherRepository) {
@@ -54,8 +56,8 @@ public class PublisherServiceImpl implements PublisherService {
      * @return publisher with the given name
      */
     @Override
-    public Publisher findByName(String name){
-        validate(!publisherRepository.existsByName(name),"error.publisher.name.notExist");
+    public Publisher findByName(String name) {
+        validate(!publisherRepository.existsByName(name), "error.publisher.name.notExist");
         return publisherRepository.findPublisherByName(name);
     }
 
@@ -64,7 +66,7 @@ public class PublisherServiceImpl implements PublisherService {
      * @return true if publisher exist in database and false otherwise
      */
     @Override
-    public boolean existByName(String name){
+    public boolean existByName(String name) {
         return publisherRepository.existsByName(name);
     }
 
@@ -92,7 +94,7 @@ public class PublisherServiceImpl implements PublisherService {
      */
     @Transactional
     @Override
-    public List<Publisher> saveAll(List<Publisher> publishers){
+    public List<Publisher> saveAll(List<Publisher> publishers) {
         publishers.forEach(publisher -> {
             validate(publisher.getId() != null, "error.publisher.haveId");
             validate(publisherRepository.existsByName(publisher.getName()), "error.publisher.name.notUnique");
@@ -147,7 +149,9 @@ public class PublisherServiceImpl implements PublisherService {
 
     private void validate(boolean expression, String errorMessage) {
         if (expression) {
-            throw new RuntimeException(errorMessage);
+            RuntimeException e = new RuntimeException(errorMessage);
+            LOGGER.error(e);
+            throw e;
         }
     }
 

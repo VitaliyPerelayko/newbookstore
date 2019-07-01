@@ -1,14 +1,14 @@
 package com.intexsoft.service.impl;
 
 import com.intexsoft.dao.model.Author;
-import com.intexsoft.dao.model.Publisher;
 import com.intexsoft.dao.repository.AuthorRepository;
 import com.intexsoft.service.AuthorService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-
+    private final static Logger LOGGER = LogManager.getLogger(AuthorServiceImpl.class);
     private final AuthorRepository authorRepository;
 
     public AuthorServiceImpl(AuthorRepository authorRepository) {
@@ -149,7 +149,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     private void validate(boolean expression, String errorMessage) {
         if (expression) {
-            throw new RuntimeException(errorMessage);
+            RuntimeException e;
+            LOGGER.error(e = new RuntimeException(errorMessage));
+            throw e;
         }
     }
 

@@ -7,6 +7,8 @@ import com.intexsoft.web.dto.request.BookRequestDTO;
 import com.intexsoft.web.dto.response.BookResponseDTO;
 import com.intexsoft.web.dto.response.BookResponseShortVersionDTO;
 import com.intexsoft.web.mapping.CustomMapping;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/books")
 public class BookController {
 
+    private final static Logger LOGGER = LogManager.getLogger(BookController.class);
     private final BookService bookService;
     private final CustomMapping mapping;
     private final Mapper mapper;
@@ -75,14 +78,16 @@ public class BookController {
     /**
      * Update book in database
      *
-     * @param id id of book which we want to update
+     * @param id             id of book which we want to update
      * @param bookRequestDTO bookRequestDTO
      * @return Response: BookResponseDTO ant http status
      */
     @PutMapping("/{id}")
-    public ResponseEntity<BookResponseDTO> update(@PathVariable Long id, @Valid @RequestBody BookRequestDTO bookRequestDTO){
-        if (!id.equals(bookRequestDTO.getId())){
-            throw new RuntimeException("Id in URL path and id in request body must be the same");
+    public ResponseEntity<BookResponseDTO> update(@PathVariable Long id, @Valid @RequestBody BookRequestDTO bookRequestDTO) {
+        if (!id.equals(bookRequestDTO.getId())) {
+            RuntimeException e = new RuntimeException("Id in URL path and id in request body must be the same");
+            LOGGER.error(e);
+            throw e;
         }
         BookResponseDTO bookResponseDTO = mapping.mapBookToBookResponseDTO(bookService.
                 update(mapping.mapBookRequestDTOToBook(bookRequestDTO)));
@@ -96,7 +101,7 @@ public class BookController {
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable Long id){
+    public void delete(@PathVariable Long id) {
         bookService.deleteById(id);
     }
 

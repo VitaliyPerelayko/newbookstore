@@ -27,9 +27,7 @@
         <hibernate.validator>6.0.17.Final</hibernate.validator>
         <mysql.conector.java>8.0.16</mysql.conector.java>
         <flyway-core>5.2.4</flyway-core>
-        <!-- XMLParser -->
-        <dom4j>2.1.1</dom4j>
-        <jaxen>1.2.0</jaxen>
+        <log4j>2.12.0</log4j>
 
         <dozer>5.5.1</dozer>
         <jackson.core>2.9.8</jackson.core>
@@ -84,6 +82,18 @@
             <version>${flyway-core}</version>
         </dependency>
 
+        <!-- Logger -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j}</version>
+        </dependency>
+
         <!--Validation-->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
@@ -116,18 +126,6 @@
             <groupId>net.sf.dozer</groupId>
             <artifactId>dozer</artifactId>
             <version>${dozer}</version>
-        </dependency>
-
-        <!-- XML parser -->
-        <dependency>
-            <groupId>org.dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>${dom4j}</version>
-        </dependency>
-        <dependency>
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-            <version>${jaxen}</version>
         </dependency>
 
         <!-- frontend -->
