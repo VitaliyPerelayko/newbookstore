@@ -112,6 +112,8 @@ public class DatabaseConfiguration {
         properties.setProperty("hibernate.hbm2ddl.auto", "validate");
         properties.setProperty("hibernate.dialect", dialect);
         properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty("hibernate.jdbc.batch_size", "5");
+        properties.setProperty("hibernate.order_inserts", "true");
         return properties;
     }
 }

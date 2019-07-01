@@ -33,6 +33,7 @@ public class Book {
 
     private BigDecimal price;
 
+    @Column(columnDefinition = "VARCHAR(15)")
     private Category category;
 
     public Book(String code, String name, String description, Set<Author> authors, LocalDate publishDate,

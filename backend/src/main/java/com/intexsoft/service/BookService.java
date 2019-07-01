@@ -21,6 +21,9 @@ public interface BookService {
     Book save(Book book);
 
     @Transactional
+    List<Book> saveAll(List<Book> books);
+
+    @Transactional
     Book update(Book book);
 
     @Transactional

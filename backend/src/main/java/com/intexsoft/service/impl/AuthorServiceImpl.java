@@ -1,6 +1,7 @@
 package com.intexsoft.service.impl;
 
 import com.intexsoft.dao.model.Author;
+import com.intexsoft.dao.model.Publisher;
 import com.intexsoft.dao.repository.AuthorRepository;
 import com.intexsoft.service.AuthorService;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,23 @@ public class AuthorServiceImpl implements AuthorService {
                 "error.author.haveId");
         validate(authorRepository.existsByName(author.getName()), "error.author.name.notUnique");
         return authorRepository.saveAndFlush(author);
+    }
+
+    /**
+     * Save all entities from List
+     * (use batching)
+     *
+     * @param authors List of authors
+     * @return List of saved authors
+     */
+    @Transactional
+    @Override
+    public List<Author> saveAll(List<Author> authors){
+        authors.forEach(author -> {
+            validate(author.getId() != null, "error.author.haveId");
+            validate(authorRepository.existsByName(author.getName()), "error.author.name.notUnique");
+        });
+        return authorRepository.saveAll(authors);
     }
 
     /**

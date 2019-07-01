@@ -1,6 +1,6 @@
-package com.intexsoft.dao.importdata.impl;
+package com.intexsoft.service.importdata.impl;
 
-import com.intexsoft.dao.importdata.ImportData;
+import com.intexsoft.service.importdata.ImportData;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Category;
@@ -39,15 +39,6 @@ public class ImportDataImpl implements ImportData {
         this.publisherService = publisherService;
     }
 
-    /**
-     * save data from xml to database
-     */
-    @Override
-    public void saveData() {
-        savePublishers();
-        saveAuthors();
-        saveBooks();
-    }
 
     /**
      * save data from xml to Database for entity Author
@@ -55,7 +46,7 @@ public class ImportDataImpl implements ImportData {
      * @return list of Author
      */
     @Override
-    public List<Author> saveAuthors() {
+    public List<Author> importAuthors() {
         List<Node> listAuthors = document.selectNodes("/data/authors/author");
         List<Author> authorList = new ArrayList<>();
 
@@ -76,7 +67,7 @@ public class ImportDataImpl implements ImportData {
      * @return list of Book
      */
     @Override
-    public List<Book> saveBooks() {
+    public List<Book> importBooks() {
         List<Node> listBooks = document.selectNodes("/data/books/book");
         List<Book> bookList = new ArrayList<>();
 
@@ -103,7 +94,7 @@ public class ImportDataImpl implements ImportData {
      * @return list of Publisher
      */
     @Override
-    public List<Publisher> savePublishers() {
+    public List<Publisher> importPublishers() {
         List<Node> listPublishers = document.selectNodes("/data/publishers/publisher/name");
         List<Publisher> publisherList = new ArrayList<>();
 

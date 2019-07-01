@@ -1,6 +1,6 @@
-package com.intexsoft.dao.importdata;
+package com.intexsoft.service.importdata;
 
-import com.intexsoft.dao.importdata.impl.ImportDataJAXBImpl;
+import com.intexsoft.service.importdata.impl.ImportDataJAXBImpl;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Publisher;
@@ -34,7 +34,7 @@ public class ImportDataJAXBImplTest {
     public void testSavePublishers() {
         when(publisherService.save(any(Publisher.class))).thenReturn(new Publisher());
         when(publisherService.existByName(any(String.class))).thenReturn(false);
-        assertDoesNotThrow(importData::savePublishers);
+        assertDoesNotThrow(importData::importPublishers);
     }
 
 
@@ -42,7 +42,7 @@ public class ImportDataJAXBImplTest {
     public void testSaveAuthors(){
         when(authorService.save(any(Author.class))).thenReturn(new Author());
         when(authorService.existByName(any(String.class))).thenReturn(false);
-        assertDoesNotThrow(importData::saveAuthors);
+        assertDoesNotThrow(importData::importAuthors);
     }
 
     @Test
@@ -51,6 +51,6 @@ public class ImportDataJAXBImplTest {
         when(bookService.existByCode(any(String.class))).thenReturn(false);
         when(publisherService.findByName(any(String.class))).thenReturn(new Publisher());
         when(authorService.findByName(any(String.class))).thenReturn(new Author());
-        assertDoesNotThrow(importData::saveBooks);
+        assertDoesNotThrow(importData::importBooks);
     }
 }

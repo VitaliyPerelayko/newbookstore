@@ -1,7 +1,7 @@
-package com.intexsoft.dao.importdata.pojo;
+package com.intexsoft.service.importdata.pojo;
 
-import com.intexsoft.dao.importdata.impl.adapters.CategotyAdapter;
-import com.intexsoft.dao.importdata.impl.adapters.LocalDateAdapter;
+import com.intexsoft.service.importdata.impl.adapters.CategotyAdapter;
+import com.intexsoft.service.importdata.impl.adapters.LocalDateAdapter;
 import com.intexsoft.dao.model.Category;
 
 import javax.xml.bind.annotation.XmlElement;

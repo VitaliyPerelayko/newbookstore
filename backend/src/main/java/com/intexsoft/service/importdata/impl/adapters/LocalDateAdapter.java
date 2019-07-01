@@ -1,4 +1,4 @@
-package com.intexsoft.dao.importdata.impl.adapters;
+package com.intexsoft.service.importdata.impl.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.LocalDate;
@@ -10,7 +10,7 @@ public class LocalDateAdapter extends XmlAdapter<String, LocalDate> {
     }
 
     @Override
-    public String marshal(LocalDate v) throws Exception {
+    public String marshal(LocalDate v) {
         return null;
     }
 }

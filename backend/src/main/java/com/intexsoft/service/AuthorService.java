@@ -22,6 +22,9 @@ public interface AuthorService {
     Author save(Author author);
 
     @Transactional
+    List<Author> saveAll(List<Author> authors);
+
+    @Transactional
     Author update(Author author);
 
     @Transactional

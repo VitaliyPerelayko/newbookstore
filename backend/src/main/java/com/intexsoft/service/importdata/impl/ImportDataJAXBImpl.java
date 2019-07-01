@@ -1,8 +1,8 @@
-package com.intexsoft.dao.importdata.impl;
+package com.intexsoft.service.importdata.impl;
 
-import com.intexsoft.dao.importdata.ImportData;
-import com.intexsoft.dao.importdata.pojo.BookPOJO;
-import com.intexsoft.dao.importdata.pojo.Data;
+import com.intexsoft.service.importdata.ImportData;
+import com.intexsoft.service.importdata.pojo.BookPOJO;
+import com.intexsoft.service.importdata.pojo.Data;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Publisher;
@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Service for importing data from xml file
+ */
 @Service
 public class ImportDataJAXBImpl implements ImportData {
 
@@ -33,15 +36,13 @@ public class ImportDataJAXBImpl implements ImportData {
         this.publisherService = publisherService;
     }
 
+    /**
+     * import data from xml file
+     *
+     * @return List of Authors
+     */
     @Override
-    public void saveData() {
-        savePublishers();
-        saveAuthors();
-        saveBooks();
-    }
-
-    @Override
-    public List<Author> saveAuthors() {
+    public List<Author> importAuthors() {
         List<Author> authorList = new ArrayList<>();
         data.getAuthorsList().forEach(authorPOJO -> {
             if (authorService.existByName(authorPOJO.getName())){
@@ -51,28 +52,36 @@ public class ImportDataJAXBImpl implements ImportData {
             author.setName(authorPOJO.getName());
             author.setBio(authorPOJO.getBio());
             author.setBirthDate(authorPOJO.getBirthDate());
-            authorService.save(author);
             authorList.add(author);
         });
         return authorList;
     }
 
+    /**
+     * import data from xml file
+     *
+     * @return List of Books
+     */
     @Override
-    public List<Book> saveBooks() {
+    public List<Book> importBooks() {
         List<Book> bookList = new ArrayList<>();
         data.getBooksList().forEach(bookPOJO -> {
             if (bookService.existByCode(bookPOJO.getCode())){
                 return;
             }
             Book book = fillBook(bookPOJO);
-            bookService.save(book);
             bookList.add(book);
         });
         return bookList;
     }
 
+    /**
+     * import data from xml file
+     *
+     * @return List of Publishers
+     */
     @Override
-    public List<Publisher> savePublishers() {
+    public List<Publisher> importPublishers() {
         List<Publisher> publisherList = new ArrayList<>();
         data.getPublishersList().forEach(publisherPOJO -> {
             if (publisherService.existByName(publisherPOJO.getName())){
@@ -80,7 +89,6 @@ public class ImportDataJAXBImpl implements ImportData {
             }
             Publisher publisher = new Publisher();
             publisher.setName(publisherPOJO.getName());
-            publisherService.save(publisher);
             publisherList.add(publisher);
         });
         return publisherList;
@@ -100,7 +108,7 @@ public class ImportDataJAXBImpl implements ImportData {
     }
 
     private Data unmarshallData() {
-        Data data = null;
+        Data data;
         try {
             data = (Data) JAXBContext.newInstance(Data.class).createUnmarshaller().
                     unmarshal(new FileReader(getClass().getResource("/datafordb/data.xml").getPath()));
