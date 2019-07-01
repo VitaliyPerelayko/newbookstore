@@ -41,6 +41,7 @@
     <books>
         <book>
             <title>For Whom the Bell Tolls</title>
+            <code>0000</code>
             <description>about war</description>
             <authors>
                 <name>Ernest Hemingway</name>
@@ -52,6 +53,7 @@
         </book>
         <book>
             <title>Foundation</title>
+            <code>0001</code>
             <description>fantastic</description>
             <authors>
                 <name>Isaac Asimov</name>
@@ -63,6 +65,7 @@
         </book>
         <book>
             <title>Anna on the neck</title>
+            <code>0002</code>
             <description>funny</description>
             <authors>
                 <name>Anton Chekhov</name>
@@ -74,6 +77,7 @@
         </book>
         <book>
             <title>Foo</title>
+            <code>0003</code>
             <description>foo</description>
             <authors>
                 <name>Isaac Asimov</name>

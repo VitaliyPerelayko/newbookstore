@@ -29,4 +29,18 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      */
     @Query("FROM Book book ORDER BY book.publishDate")
     List<Book> findAllOrderedByDate();
+
+    /**
+     * @param code code of publisher
+     * @return true if book with the given code exist in database and false otherwise
+     */
+    boolean existsByCode(String code);
+
+    /**
+     * find book by the given code
+     *
+     * @param code code of book
+     * @return book with the given code
+     */
+    Book findBookByCode(String code);
 }

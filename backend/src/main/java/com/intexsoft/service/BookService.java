@@ -13,6 +13,8 @@ public interface BookService {
 
     List<Book> findAllSortByDate();
 
+    Book findByCode(String code);
+
     @Transactional
     Book save(Book book);
 

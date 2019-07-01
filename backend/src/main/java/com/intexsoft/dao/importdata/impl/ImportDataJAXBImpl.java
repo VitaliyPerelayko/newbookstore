@@ -80,6 +80,7 @@ public class ImportDataJAXBImpl implements ImportData {
     private Book fillBook(BookPOJO bookPOJO) {
         Book book = new Book();
         book.setName(bookPOJO.getName());
+        book.setCode(bookPOJO.getCode());
         book.setPublisher(publisherService.findByName(bookPOJO.getPublisher()));
         book.setCategory(bookPOJO.getCategory());
         book.setPublishDate(bookPOJO.getPublishDate());

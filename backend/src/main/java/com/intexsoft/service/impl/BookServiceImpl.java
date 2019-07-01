@@ -44,6 +44,18 @@ public class BookServiceImpl implements BookService {
     }
 
     /**
+     * find book by the given code
+     *
+     * @param code code of book
+     * @return book with the given code
+     */
+    @Override
+    public Book findByCode(String code){
+        validate(!bookRepository.existsByCode(code), "error.book.code.notExist");
+        return bookRepository.findBookByCode(code);
+    }
+
+    /**
      * Save new entity Book.
      *
      * @param book book entity
@@ -54,6 +66,7 @@ public class BookServiceImpl implements BookService {
     public Book save(Book book) {
         validate(book.getId() != null,
                 "error.book.haveId");
+        validate(!bookRepository.existsByCode(book.getCode()), "error.book.code.notUnique");
         return bookRepository.saveAndFlush(book);
     }
 
@@ -70,6 +83,8 @@ public class BookServiceImpl implements BookService {
         validate(id == null,
                 "error.book.haveNoId");
         isExist(id);
+        Book duplicate = findByCode(book.getCode());
+        validate(id.equals(duplicate.getId()), "error.book.code.notUnique");
         return bookRepository.saveAndFlush(book);
     }
 

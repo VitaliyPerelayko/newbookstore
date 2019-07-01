@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -71,6 +72,7 @@ public class AuthorServiceImpl implements AuthorService {
     public Author save(Author author) {
         validate(author.getId() != null,
                 "error.author.haveId");
+        validate(authorRepository.existsByName(author.getName()), "error.author.name.notUnique");
         return authorRepository.saveAndFlush(author);
     }
 
@@ -87,6 +89,8 @@ public class AuthorServiceImpl implements AuthorService {
         validate(id == null,
                 "error.author.haveNoId");
         isExist(id);
+        Author duplicate = findByName(author.getName());
+        validate(id.equals(duplicate.getId()), "error.author.name.notUnique");
         return authorRepository.saveAndFlush(author);
     }
 

@@ -17,6 +17,8 @@ public class BookPOJO {
 
     private String name;
 
+    private String code;
+
     private String description;
 
     private List<String> authors;
@@ -36,6 +38,15 @@ public class BookPOJO {
     @XmlElement(name = "title")
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    @XmlElement
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDescription() {

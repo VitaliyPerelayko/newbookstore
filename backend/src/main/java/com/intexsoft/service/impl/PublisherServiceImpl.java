@@ -70,6 +70,7 @@ public class PublisherServiceImpl implements PublisherService {
     public Publisher save(Publisher publisher) {
         validate(publisher.getId() != null,
                 "error.publisher.haveId");
+        validate(publisherRepository.existsByName(publisher.getName()), "error.publisher.name.notUnique");
         return publisherRepository.saveAndFlush(publisher);
     }
 
@@ -86,6 +87,8 @@ public class PublisherServiceImpl implements PublisherService {
         validate(id == null,
                 "error.publisher.haveNoId");
         isExist(id);
+        Publisher duplicate = findByName(publisher.getName());
+        validate(id.equals(duplicate.getId()), "error.publisher.name.notUnique");
         return publisherRepository.saveAndFlush(publisher);
     }
 
