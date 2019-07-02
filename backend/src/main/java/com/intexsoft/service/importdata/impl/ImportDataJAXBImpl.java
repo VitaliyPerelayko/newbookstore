@@ -1,23 +1,23 @@
 package com.intexsoft.service.importdata.impl;
 
 import com.intexsoft.service.importdata.ImportData;
+import com.intexsoft.service.importdata.pojo.AuthorPOJO;
 import com.intexsoft.service.importdata.pojo.BookPOJO;
 import com.intexsoft.service.importdata.pojo.Data;
-import com.intexsoft.dao.model.Author;
-import com.intexsoft.dao.model.Book;
-import com.intexsoft.dao.model.Publisher;
-import com.intexsoft.service.AuthorService;
-import com.intexsoft.service.BookService;
-import com.intexsoft.service.PublisherService;
+import com.intexsoft.service.importdata.pojo.PublisherPOJO;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Service for importing data from xml file
@@ -25,98 +25,84 @@ import java.util.stream.Collectors;
 @Service
 public class ImportDataJAXBImpl implements ImportData {
 
-    private final BookService bookService;
-    private final AuthorService authorService;
-    private final PublisherService publisherService;
-
-    public ImportDataJAXBImpl(BookService bookService, AuthorService authorService, PublisherService publisherService) {
-        this.bookService = bookService;
-        this.authorService = authorService;
-        this.publisherService = publisherService;
-    }
+    private final static Logger LOGGER = LogManager.getLogger(ImportDataJAXBImpl.class);
+    private final static Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
     /**
      * import data from xml file
+     * Entity will not imported if it's invalid
      *
-     * @return List of Authors
+     * @return List of AuthorsPOJO
      */
     @Override
-    public List<Author> importAuthors() {
-        Data data = unmarshallData();
-
-        List<Author> authorList = new ArrayList<>();
-        data.getAuthorsList().forEach(authorPOJO -> {
-            if (authorService.existByName(authorPOJO.getName())){
-              return;
+    public List<AuthorPOJO> importAuthors(String path) {
+        List<AuthorPOJO> authorList = unmarshallData(path).getAuthorsList();
+        Iterator<AuthorPOJO> iterator = authorList.iterator();
+        while (iterator.hasNext()){
+            AuthorPOJO authorPOJO = iterator.next();
+            if (valid(authorPOJO).get()) {
+                LOGGER.warn("Entity Author with name " + authorPOJO.getName() + " wasn't imported from xml, because of invalid data");
+                iterator.remove();
             }
-            Author author = new Author();
-            author.setName(authorPOJO.getName());
-            author.setBio(authorPOJO.getBio());
-            author.setBirthDate(authorPOJO.getBirthDate());
-            authorList.add(author);
-        });
+        }
         return authorList;
     }
 
     /**
      * import data from xml file
+     * Entity will not imported if it's invalid
      *
-     * @return List of Books
+     * @return List of BooksPOJO
      */
     @Override
-    public List<Book> importBooks() {
-        Data data = unmarshallData();
-
-        List<Book> bookList = new ArrayList<>();
-        data.getBooksList().forEach(bookPOJO -> {
-            if (bookService.existByCode(bookPOJO.getCode())){
-                return;
+    public List<BookPOJO> importBooks(String path) {
+        List<BookPOJO> bookList = unmarshallData(path).getBooksList();
+        Iterator<BookPOJO> iterator = bookList.iterator();
+        while (iterator.hasNext()) {
+            BookPOJO bookPOJO = iterator.next();
+            if (valid(bookPOJO).get()) {
+                LOGGER.warn("Entity Book with code " + bookPOJO.getCode() + " wasn't imported from xml, because of invalid data");
+                iterator.remove();
             }
-            Book book = fillBook(bookPOJO);
-            bookList.add(book);
-        });
+        }
         return bookList;
     }
 
     /**
      * import data from xml file
+     * Entity will not imported if it's invalid
      *
-     * @return List of Publishers
+     * @return List of PublishersPOJO
      */
     @Override
-    public List<Publisher> importPublishers() {
-        Data data = unmarshallData();
+    public List<PublisherPOJO> importPublishers(String path) {
+        List<PublisherPOJO> publisherList = unmarshallData(path).getPublishersList();
+        Iterator<PublisherPOJO> iterator = publisherList.iterator();
 
-        List<Publisher> publisherList = new ArrayList<>();
-        data.getPublishersList().forEach(publisherPOJO -> {
-            if (publisherService.existByName(publisherPOJO.getName())){
-                return;
+        while (iterator.hasNext()){
+            PublisherPOJO publisherPOJO = iterator.next();
+            if (valid(publisherPOJO).get()) {
+                LOGGER.warn("Entity publisher with name " + publisherPOJO.getName() + " wasn't imported from xml, because of invalid data");
+                iterator.remove();
             }
-            Publisher publisher = new Publisher();
-            publisher.setName(publisherPOJO.getName());
-            publisherList.add(publisher);
-        });
+        }
         return publisherList;
     }
 
-    private Book fillBook(BookPOJO bookPOJO) {
-        Book book = new Book();
-        book.setName(bookPOJO.getName());
-        book.setCode(bookPOJO.getCode());
-        book.setPublisher(publisherService.findByName(bookPOJO.getPublisher()));
-        book.setCategory(bookPOJO.getCategory());
-        book.setPublishDate(bookPOJO.getPublishDate());
-        book.setPrice(bookPOJO.getPrice());
-        book.setAuthors(bookPOJO.getAuthors().stream().map(authorService::findByName).collect(Collectors.toSet()));
-        book.setDescription(bookPOJO.getDescription());
-        return book;
+    private <T> AtomicBoolean valid(T object) {
+        AtomicBoolean fail = new AtomicBoolean(false);
+        VALIDATOR.validate(object).forEach(violation -> {
+            LOGGER.error(violation.getMessage());
+            fail.set(true);
+        });
+        return fail;
     }
 
-    private Data unmarshallData() {
+    private Data unmarshallData(String path) {
         Data data;
         try {
             data = (Data) JAXBContext.newInstance(Data.class).createUnmarshaller().
-                    unmarshal(new FileReader(getClass().getResource("/datafordb/data.xml").getPath()));
+                    unmarshal(new FileReader(path));
         } catch (JAXBException | FileNotFoundException e) {
             throw new RuntimeException(e);
         }

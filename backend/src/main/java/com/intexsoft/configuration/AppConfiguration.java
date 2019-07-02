@@ -11,6 +11,7 @@ import org.springframework.context.annotation.PropertySource;
  */
 @Configuration
 @ComponentScan(basePackages = "com.intexsoft")
+@PropertySource("classpath:app.properties")
 @Import({WebConfiguration.class, DatabaseConfiguration.class})
 public class AppConfiguration {
 }

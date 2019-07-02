@@ -4,6 +4,8 @@ import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.service.AuthorService;
 import com.intexsoft.service.PublisherService;
+import com.intexsoft.service.importdata.pojo.AuthorPOJO;
+import com.intexsoft.service.importdata.pojo.BookPOJO;
 import com.intexsoft.web.dto.AuthorDTO;
 import com.intexsoft.web.dto.PublisherDTO;
 import com.intexsoft.web.dto.request.BookRequestDTO;
@@ -51,6 +53,16 @@ public class CustomMappingImpl implements CustomMapping {
     }
 
     @Override
+    public Book mapBookPOJOToBook(BookPOJO bookPOJO){
+        Book book = mapper.map(bookPOJO, Book.class);
+        book.setAuthors(bookPOJO.getAuthors().stream().
+                map(authorService::findByName).collect(Collectors.toSet()));
+        book.setPublishDate(bookPOJO.getPublishDate());
+        book.setPublisher(publisherService.findByName(bookPOJO.getPublisher()));
+        return book;
+    }
+
+    @Override
     public Author mapAuthorDTOToAuthor(AuthorDTO authorDTO) {
         Author author = mapper.map(authorDTO, Author.class);
         author.setBirthDate(LocalDate.parse(authorDTO.getBirthDate()));
@@ -58,12 +70,16 @@ public class CustomMappingImpl implements CustomMapping {
     }
 
     @Override
-    public AuthorDTO  mapAuthorToAuthorDTO(Author author) {
+    public AuthorDTO mapAuthorToAuthorDTO(Author author) {
         AuthorDTO authorDTO = mapper.map(author, AuthorDTO.class);
         authorDTO.setBirthDate(author.getBirthDate().toString());
         return authorDTO;
     }
 
-
-
+    @Override
+    public Author mapAuthorPOJOToAuthor(AuthorPOJO authorPOJO){
+        Author author = mapper.map(authorPOJO, Author.class);
+        author.setBirthDate(authorPOJO.getBirthDate());
+        return author;
+    }
 }

@@ -1,5 +1,8 @@
 package com.intexsoft.web.controllers;
 
+import com.intexsoft.dao.model.Author;
+import com.intexsoft.dao.model.Book;
+import com.intexsoft.dao.model.Publisher;
 import com.intexsoft.service.AuthorService;
 import com.intexsoft.service.BookService;
 import com.intexsoft.service.PublisherService;
@@ -10,6 +13,7 @@ import com.intexsoft.web.dto.response.BookResponseDTO;
 import com.intexsoft.web.mapping.CustomMapping;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +37,8 @@ public class UpdateController {
     private final PublisherService publisherService;
     private final AuthorService authorService;
     private final BookService bookService;
+    @Value("${path.to.data.xml}")
+    private String path;
 
     public UpdateController(@Qualifier("importDataJAXBImpl") ImportData importData, CustomMapping customMapping,
                             Mapper mapper, PublisherService publisherService, AuthorService authorService,
@@ -51,9 +57,9 @@ public class UpdateController {
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public void updateDatabase() {
-        publisherService.saveAll(importData.importPublishers());
-        authorService.saveAll(importData.importAuthors());
-        bookService.saveAll(importData.importBooks());
+        publisherService.saveAll(getPublishers());
+        authorService.saveAll(getAuthors());
+        bookService.saveAll(getBooks());
     }
 
     /**
@@ -65,7 +71,7 @@ public class UpdateController {
      */
     @GetMapping("/books")
     public ResponseEntity<List<BookResponseDTO>> updateDatabaseBooks() {
-        return ResponseEntity.ok(importData.importBooks().stream().
+        return ResponseEntity.ok(bookService.saveAll(getBooks()).stream().
                 map(customMapping::mapBookToBookResponseDTO).collect(Collectors.toList()));
     }
 
@@ -78,7 +84,7 @@ public class UpdateController {
      */
     @GetMapping("/authors")
     public ResponseEntity<List<AuthorDTO>> updateDatabaseAuthors() {
-        return ResponseEntity.ok(importData.importAuthors().stream().
+        return ResponseEntity.ok(authorService.saveAll(getAuthors()).stream().
                 map(customMapping::mapAuthorToAuthorDTO).collect(Collectors.toList()));
     }
 
@@ -91,7 +97,20 @@ public class UpdateController {
      */
     @GetMapping("/publishers")
     public ResponseEntity<List<PublisherDTO>> updateDatabasePublishers() {
-        return ResponseEntity.ok(importData.importPublishers().stream().
+        return ResponseEntity.ok(publisherService.saveAll(getPublishers()).stream().
                 map(publisher -> mapper.map(publisher, PublisherDTO.class)).collect(Collectors.toList()));
+    }
+
+    private List<Publisher> getPublishers() {
+        return importData.importPublishers(path).stream().map(publisherPOJO ->
+                mapper.map(publisherPOJO, Publisher.class)).collect(Collectors.toList());
+    }
+
+    private List<Author> getAuthors() {
+        return importData.importAuthors(path).stream().map(customMapping::mapAuthorPOJOToAuthor).collect(Collectors.toList());
+    }
+
+    private List<Book> getBooks() {
+        return importData.importBooks(path).stream().map(customMapping::mapBookPOJOToBook).collect(Collectors.toList());
     }
 }

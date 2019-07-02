@@ -1,16 +1,16 @@
 package com.intexsoft.service.importdata;
 
-import com.intexsoft.dao.model.Author;
-import com.intexsoft.dao.model.Book;
-import com.intexsoft.dao.model.Publisher;
+import com.intexsoft.service.importdata.pojo.AuthorPOJO;
+import com.intexsoft.service.importdata.pojo.BookPOJO;
+import com.intexsoft.service.importdata.pojo.PublisherPOJO;
 
 import java.util.List;
 
 public interface ImportData {
 
-    List<Author> importAuthors();
+    List<AuthorPOJO> importAuthors(String path);
 
-    List<Book> importBooks();
+    List<BookPOJO> importBooks(String path);
 
-    List<Publisher> importPublishers();
+    List<PublisherPOJO> importPublishers(String path);
 }

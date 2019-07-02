@@ -2,6 +2,8 @@ package com.intexsoft.configuration;
 
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
+import com.intexsoft.service.importdata.pojo.AuthorPOJO;
+import com.intexsoft.service.importdata.pojo.BookPOJO;
 import com.intexsoft.web.dto.AuthorDTO;
 import com.intexsoft.web.dto.request.BookRequestDTO;
 import com.intexsoft.web.dto.response.BookResponseDTO;
@@ -30,8 +32,10 @@ public class WebConfiguration implements WebMvcConfigurer {
             @Override
             protected void configure() {
                 mapping(Author.class, AuthorDTO.class).exclude("birthDate");
+                mapping(Author.class, AuthorPOJO.class).exclude("birthDate");
                 mapping(Book.class, BookRequestDTO.class).exclude("publishDate");
                 mapping(Book.class, BookResponseDTO.class).exclude("publishDate");
+                mapping(Book.class, BookPOJO.class).exclude("publishDate");
 
             }
         };
