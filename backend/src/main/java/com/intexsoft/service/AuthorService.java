@@ -25,6 +25,9 @@ public interface AuthorService {
     List<Author> saveAll(List<Author> authors);
 
     @Transactional
+    List<Author> saveBatch(List<Author> authors);
+
+    @Transactional
     Author update(Author author);
 
     @Transactional

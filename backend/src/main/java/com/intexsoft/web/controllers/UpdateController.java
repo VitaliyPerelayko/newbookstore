@@ -57,9 +57,9 @@ public class UpdateController {
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public void updateDatabase() {
-        publisherService.saveAll(getPublishers());
-        authorService.saveAll(getAuthors());
-        bookService.saveAll(getBooks());
+        publisherService.saveBatch(getPublishers());
+        authorService.saveBatch(getAuthors());
+        bookService.saveBatch(getBooks());
     }
 
     /**
@@ -71,7 +71,7 @@ public class UpdateController {
      */
     @GetMapping("/books")
     public ResponseEntity<List<BookResponseDTO>> updateDatabaseBooks() {
-        return ResponseEntity.ok(bookService.saveAll(getBooks()).stream().
+        return ResponseEntity.ok(bookService.saveBatch(getBooks()).stream().
                 map(customMapping::mapBookToBookResponseDTO).collect(Collectors.toList()));
     }
 
@@ -84,7 +84,7 @@ public class UpdateController {
      */
     @GetMapping("/authors")
     public ResponseEntity<List<AuthorDTO>> updateDatabaseAuthors() {
-        return ResponseEntity.ok(authorService.saveAll(getAuthors()).stream().
+        return ResponseEntity.ok(authorService.saveBatch(getAuthors()).stream().
                 map(customMapping::mapAuthorToAuthorDTO).collect(Collectors.toList()));
     }
 
@@ -97,7 +97,7 @@ public class UpdateController {
      */
     @GetMapping("/publishers")
     public ResponseEntity<List<PublisherDTO>> updateDatabasePublishers() {
-        return ResponseEntity.ok(publisherService.saveAll(getPublishers()).stream().
+        return ResponseEntity.ok(publisherService.saveBatch(getPublishers()).stream().
                 map(publisher -> mapper.map(publisher, PublisherDTO.class)).collect(Collectors.toList()));
     }
 

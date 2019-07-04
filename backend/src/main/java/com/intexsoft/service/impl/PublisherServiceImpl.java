@@ -103,6 +103,26 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     /**
+     * Save all entities from List
+     * (use batching)
+     * (this method is used for save imported data)
+     *
+     * @param publishers List of publishers
+     * @return List of saved publishers
+     */
+    @Transactional
+    @Override
+    public List<Publisher> saveBatch(List<Publisher> publishers) {
+        publishers.forEach(publisher -> {
+            String code = publisher.getName();
+            if (existByName(code)) {
+                publisher.setId(findByName(code).getId());
+            }
+        });
+        return publisherRepository.saveAll(publishers);
+    }
+
+    /**
      * Update entity Publisher.
      *
      * @param publisher publisher entity

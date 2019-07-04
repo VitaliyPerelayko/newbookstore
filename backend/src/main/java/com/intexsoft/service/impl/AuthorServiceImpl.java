@@ -56,8 +56,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @return author with the given name
      */
     @Override
-    public Author findByName(String name){
-        validate(!authorRepository.existsByName(name),"error.author.name.notExist");
+    public Author findByName(String name) {
+        validate(!authorRepository.existsByName(name), "error.author.name.notExist");
         return authorRepository.findAuthorByName(name);
     }
 
@@ -66,7 +66,7 @@ public class AuthorServiceImpl implements AuthorService {
      * @return true if author exist in database and false otherwise
      */
     @Override
-    public boolean existByName(String name){
+    public boolean existByName(String name) {
         return authorRepository.existsByName(name);
     }
 
@@ -94,10 +94,30 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Transactional
     @Override
-    public List<Author> saveAll(List<Author> authors){
+    public List<Author> saveAll(List<Author> authors) {
         authors.forEach(author -> {
             validate(author.getId() != null, "error.author.haveId");
             validate(authorRepository.existsByName(author.getName()), "error.author.name.notUnique");
+        });
+        return authorRepository.saveAll(authors);
+    }
+
+    /**
+     * Save all entities from List
+     * (use batching)
+     * (this method is used for save imported data)
+     *
+     * @param authors List of authors
+     * @return List of saved authors
+     */
+    @Transactional
+    @Override
+    public List<Author> saveBatch(List<Author> authors) {
+        authors.forEach(author -> {
+            String code = author.getName();
+            if (existByName(code)) {
+                author.setId(findByName(code).getId());
+            }
         });
         return authorRepository.saveAll(authors);
     }

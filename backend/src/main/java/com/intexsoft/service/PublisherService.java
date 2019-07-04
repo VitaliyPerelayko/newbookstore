@@ -19,6 +19,9 @@ public interface PublisherService {
     @Transactional
     List<Publisher> saveAll(List<Publisher> publishers);
 
+    @Transactional
+    List<Publisher> saveBatch(List<Publisher> publishers);
+
     Publisher update(Publisher publisher);
 
     void delete(Publisher publisher);

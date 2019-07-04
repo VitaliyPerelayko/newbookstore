@@ -20,6 +20,7 @@ public class ImportDataJAXBImplTest {
 
     private final String pathValidFile = getClass().getClassLoader().getResource("datafordb/valid_data.xml").getPath();
     private final String pathInvalidFile = getClass().getClassLoader().getResource("datafordb/invalid_data.xml").getPath();
+    private final String pathFileDuplicate = getClass().getClassLoader().getResource("datafordb/duplicate_data.xml").getPath();
 
     private final List<AuthorPOJO> authorList = Arrays.asList(
             new AuthorPOJO("Anton Chekhov",
@@ -46,7 +47,7 @@ public class ImportDataJAXBImplTest {
                     Collections.singletonList("Ernest Hemingway"), LocalDate.of(1940, 9, 21),
                     "AMG", new BigDecimal("3.99"), Category.DRAMA),
             new BookPOJO("Foundation", "0001", "fantastic",
-                    Collections.singletonList("Isaac Asimov"), LocalDate.of(1985, 2, 23),
+                    Collections.singletonList("Isaac Asimov"), LocalDate.of(1985, 3, 23),
                     "AST", new BigDecimal("5.86"), Category.DETECTIVE),
             new BookPOJO("Anna on the neck", "0002", "funny",
                     Collections.singletonList("Anton Chekhov"), LocalDate.of(1962, 1, 1),
@@ -71,7 +72,6 @@ public class ImportDataJAXBImplTest {
 
     @Test
     public void testImportBooks() {
-        //WTF
         assertEquals(importData.importBooks(pathValidFile),bookList);
     }
 
@@ -90,6 +90,23 @@ public class ImportDataJAXBImplTest {
     @Test
     public void testImportBooksInvalidData(){
         assertEquals(importData.importBooks(pathInvalidFile),
+                Collections.singletonList(bookList.get(1)));
+    }
+
+    @Test
+    public void testImportPublishersDuplicate(){
+        assertEquals(importData.importPublishers(pathFileDuplicate), publisherList);
+    }
+
+    @Test
+    public void testImportAuthorsDuplicate(){
+        assertEquals(importData.importAuthors(pathFileDuplicate),
+                Collections.singletonList(authorList.get(2)));
+    }
+
+    @Test
+    public void testImportBooksDuplicate(){
+        assertEquals(importData.importBooks(pathFileDuplicate),
                 Collections.singletonList(bookList.get(1)));
     }
 }

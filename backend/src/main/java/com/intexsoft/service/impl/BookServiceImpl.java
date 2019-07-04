@@ -100,6 +100,26 @@ public class BookServiceImpl implements BookService {
     }
 
     /**
+     * Save all entities from List
+     * (use batching)
+     * (this method is used for save imported data)
+     *
+     * @param books List of books
+     * @return List of saved books
+     */
+    @Transactional
+    @Override
+    public List<Book> saveBatch(List<Book> books) {
+        books.forEach(book -> {
+            String code = book.getCode();
+            if (existByCode(code)) {
+                book.setId(findByCode(code).getId());
+            }
+        });
+        return bookRepository.saveAll(books);
+    }
+
+    /**
      * Update entity Book.
      *
      * @param book book entity

@@ -5,8 +5,8 @@
             <name>AST</name>
         </publisher>
         <publisher>
-            <!-- empty -->
-            <name></name>
+            <!-- null -->
+
         </publisher>
         <publisher>
             <!-- blank -->
@@ -28,7 +28,8 @@
         <author>
             <name>    </name>
             <bio>American journalist, novelist, short-story writer, and sportsman</bio>
-            <birthDate>1899-06-21</birthDate>
+            <!-- invalid date -->
+            <birthDate>189921</birthDate>
         </author>
         <author>
             <name>Stephen King</name>
@@ -55,6 +56,7 @@
             </authors>
             <publishDate>1940-09-21</publishDate>
             <publisher>AMG</publisher>
+            <!-- negative price -->
             <price>-99</price>
             <category>drama</category>
         </book>
@@ -88,6 +90,7 @@
             <description>foo</description>
             <authors>
                 <name>Isaac Asimov</name>
+                <!-- blank -->
                 <name> </name>
             </authors>
             <publishDate>1999-01-01</publishDate>

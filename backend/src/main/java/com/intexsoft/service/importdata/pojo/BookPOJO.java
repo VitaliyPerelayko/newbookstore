@@ -43,6 +43,7 @@ public class BookPOJO {
     @Positive(message = "bookPOJO.price.positive")
     private BigDecimal price;
 
+    @NotNull(message = "bookPOJO.category.notNull")
     private Category category;
 
     public BookPOJO(@NotBlank(message = "bookPOJO.name.notBlank")
