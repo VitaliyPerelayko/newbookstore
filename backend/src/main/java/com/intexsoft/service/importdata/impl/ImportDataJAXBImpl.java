@@ -11,8 +11,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -61,7 +61,6 @@ public class ImportDataJAXBImpl implements ImportData {
      * import data from xml file
      * Entity will not imported if it's invalid
      * (remark: if there are duplicates of publishers then will imported only the last of them)
-
      *
      * @return List of PublishersPOJO
      */
@@ -94,14 +93,14 @@ public class ImportDataJAXBImpl implements ImportData {
         return false;
     }
 
-    private InformationFromXmlFile unmarshallData(String path) {
-        InformationFromXmlFile informationFromXmlFile;
-        try {
-            informationFromXmlFile = (InformationFromXmlFile) JAXBContext.newInstance(InformationFromXmlFile.class).createUnmarshaller().
-                    unmarshal(new FileReader(path));
-        } catch (JAXBException | FileNotFoundException e) {
+    private InformationFromFile unmarshallData(String path) {
+        InformationFromFile informationFromFile;
+        try (FileReader fileReader = new FileReader(path)) {
+            informationFromFile = (InformationFromFile) JAXBContext.newInstance(InformationFromFile.class).createUnmarshaller().
+                    unmarshal(fileReader);
+        } catch (IOException | JAXBException e) {
             throw new RuntimeException(e);
         }
-        return informationFromXmlFile;
+        return informationFromFile;
     }
 }

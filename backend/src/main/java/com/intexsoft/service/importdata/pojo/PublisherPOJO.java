@@ -1,5 +1,7 @@
 package com.intexsoft.service.importdata.pojo;
 
+import com.opencsv.bean.CsvBindByName;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlElement;
@@ -11,6 +13,7 @@ public class PublisherPOJO implements ObjectsForXmlBindings {
 
     @NotBlank(message = "publisherPOJO.name.notBlank")
     @Size(max = 50, message = "publisherPOJO.name.size")
+    @CsvBindByName(column = "name")
     private String name;
 
     public PublisherPOJO(@NotBlank(message = "publisherPOJO.name.notBlank")

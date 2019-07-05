@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 @XmlRootElement(name = "data")
-public class InformationFromXmlFile {
+public class InformationFromFile {
 
     private List<PublisherPOJO> publishersList;
 

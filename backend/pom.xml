@@ -30,6 +30,7 @@
         <mysql.conector.java>8.0.16</mysql.conector.java>
         <flyway-core>5.2.4</flyway-core>
         <log4j>2.12.0</log4j>
+        <opencsv>4.6</opencsv>
 
         <dozer>5.5.1</dozer>
         <jackson.core>2.9.8</jackson.core>
@@ -82,6 +83,13 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
             <version>${flyway-core}</version>
+        </dependency>
+
+        <!-- Parsers -->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>${opencsv}</version>
         </dependency>
 
         <!-- Logger -->
