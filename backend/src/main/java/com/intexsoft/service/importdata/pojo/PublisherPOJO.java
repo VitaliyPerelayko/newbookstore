@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 @XmlRootElement(name = "publisher")
-public class PublisherPOJO {
+public class PublisherPOJO implements ObjectsForXmlBindings {
 
     @NotBlank(message = "publisherPOJO.name.notBlank")
     @Size(max = 50, message = "publisherPOJO.name.size")
@@ -21,7 +21,8 @@ public class PublisherPOJO {
     public PublisherPOJO() {
     }
 
-    public String getName() {
+    @Override
+    public String getUniqueValue() {
         return name;
     }
 

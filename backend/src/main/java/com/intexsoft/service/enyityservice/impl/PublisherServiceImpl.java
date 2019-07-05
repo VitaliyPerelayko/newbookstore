@@ -1,8 +1,8 @@
-package com.intexsoft.service.impl;
+package com.intexsoft.service.enyityservice.impl;
 
 import com.intexsoft.dao.model.Publisher;
 import com.intexsoft.dao.repository.PublisherRepository;
-import com.intexsoft.service.PublisherService;
+import com.intexsoft.service.enyityservice.PublisherService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -56,9 +56,8 @@ public class PublisherServiceImpl implements PublisherService {
      * @return publisher with the given name
      */
     @Override
-    public Publisher findByName(String name) {
-        validate(!publisherRepository.existsByName(name), "error.publisher.name.notExist");
-        return publisherRepository.findPublisherByName(name);
+    public Optional<Publisher> findByName(String name) {
+        return Optional.ofNullable(publisherRepository.findPublisherByName(name));
     }
 
     /**
@@ -114,10 +113,8 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public List<Publisher> saveBatch(List<Publisher> publishers) {
         publishers.forEach(publisher -> {
-            String code = publisher.getName();
-            if (existByName(code)) {
-                publisher.setId(findByName(code).getId());
-            }
+            Optional<Publisher> duplicatePublisher = findByName(publisher.getName());
+            duplicatePublisher.ifPresent(value -> publisher.setId(value.getId()));
         });
         return publisherRepository.saveAll(publishers);
     }
@@ -135,8 +132,8 @@ public class PublisherServiceImpl implements PublisherService {
         validate(id == null,
                 "error.publisher.haveNoId");
         isExist(id);
-        Publisher duplicate = findByName(publisher.getName());
-        validate(id.equals(duplicate.getId()), "error.publisher.name.notUnique");
+        Optional<Publisher> duplicate = findByName(publisher.getName());
+        duplicate.ifPresent(value -> validate(id.equals(value.getId()), "error.publisher.name.notUnique"));
         return publisherRepository.saveAndFlush(publisher);
     }
 
@@ -169,9 +166,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     private void validate(boolean expression, String errorMessage) {
         if (expression) {
-            RuntimeException e = new RuntimeException(errorMessage);
-            LOGGER.error(e);
-            throw e;
+             throw new RuntimeException(errorMessage);
         }
     }
 

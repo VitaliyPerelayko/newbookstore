@@ -114,6 +114,9 @@ public class DatabaseConfiguration {
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.jdbc.batch_size", "5");
         properties.setProperty("hibernate.order_inserts", "true");
+        properties.setProperty("hibernate.order_updates", "true");
+        properties.setProperty("hibernate.jdbc.batch_versioned_data", "true");
+
         return properties;
     }
 }

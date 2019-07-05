@@ -1,6 +1,7 @@
 package com.intexsoft.web.dto;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
@@ -10,9 +11,10 @@ public class AuthorDTO {
     private Long id;
 
     @NotBlank(message = "Name of author must be not blank")
+    @Size(max = 50, message = "Amount of characters in author's name must be less than 50")
     private String name;
 
-    @Size(max = 200, message = "Amount of characters in field biography must be less 200")
+    @Size(max = 200, message = "Amount of characters in author's biography must be less 200")
     private String bio;
 
     @NotBlank(message = "BirthDate of author must be not blank")

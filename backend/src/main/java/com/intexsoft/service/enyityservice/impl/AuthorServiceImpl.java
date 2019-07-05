@@ -1,8 +1,8 @@
-package com.intexsoft.service.impl;
+package com.intexsoft.service.enyityservice.impl;
 
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.repository.AuthorRepository;
-import com.intexsoft.service.AuthorService;
+import com.intexsoft.service.enyityservice.AuthorService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -56,9 +56,8 @@ public class AuthorServiceImpl implements AuthorService {
      * @return author with the given name
      */
     @Override
-    public Author findByName(String name) {
-        validate(!authorRepository.existsByName(name), "error.author.name.notExist");
-        return authorRepository.findAuthorByName(name);
+    public Optional<Author> findByName(String name) {
+        return Optional.ofNullable(authorRepository.findAuthorByName(name));
     }
 
     /**
@@ -114,10 +113,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<Author> saveBatch(List<Author> authors) {
         authors.forEach(author -> {
-            String code = author.getName();
-            if (existByName(code)) {
-                author.setId(findByName(code).getId());
-            }
+            Optional<Author> updatedAuthor = findByName(author.getName());
+            updatedAuthor.ifPresent(value -> author.setId(value.getId()));
         });
         return authorRepository.saveAll(authors);
     }
@@ -135,8 +132,8 @@ public class AuthorServiceImpl implements AuthorService {
         validate(id == null,
                 "error.author.haveNoId");
         isExist(id);
-        Author duplicate = findByName(author.getName());
-        validate(id.equals(duplicate.getId()), "error.author.name.notUnique");
+        Optional<Author> duplicate = findByName(author.getName());
+        duplicate.ifPresent(value -> validate(id.equals(value.getId()), "error.author.name.notUnique"));
         return authorRepository.saveAndFlush(author);
     }
 
@@ -169,9 +166,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     private void validate(boolean expression, String errorMessage) {
         if (expression) {
-            RuntimeException e;
-            LOGGER.error(e = new RuntimeException(errorMessage));
-            throw e;
+            throw new RuntimeException(errorMessage);
         }
     }
 

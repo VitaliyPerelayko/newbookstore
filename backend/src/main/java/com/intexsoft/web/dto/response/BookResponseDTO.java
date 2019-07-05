@@ -14,6 +14,8 @@ public class BookResponseDTO {
 
     private String name;
 
+    private String code;
+
     private String description;
 
     private List<AuthorResponseInBookDTO> authorsName;
@@ -40,6 +42,14 @@ public class BookResponseDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDescription() {

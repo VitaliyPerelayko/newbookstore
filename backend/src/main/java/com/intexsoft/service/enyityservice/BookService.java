@@ -1,9 +1,10 @@
-package com.intexsoft.service;
+package com.intexsoft.service.enyityservice;
 
 import com.intexsoft.dao.model.Book;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service layer for Book entity.
@@ -13,7 +14,7 @@ public interface BookService {
 
     List<Book> findAllSortByDate();
 
-    Book findByCode(String code);
+    Optional<Book> findByCode(String code);
 
     boolean existByCode(String code);
 

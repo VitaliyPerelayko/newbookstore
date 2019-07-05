@@ -1,7 +1,7 @@
 package com.intexsoft.web.controllers;
 
 import com.intexsoft.dao.model.Publisher;
-import com.intexsoft.service.PublisherService;
+import com.intexsoft.service.enyityservice.PublisherService;
 import com.intexsoft.web.dto.PublisherDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

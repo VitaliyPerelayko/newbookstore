@@ -1,16 +1,17 @@
-package com.intexsoft.service;
+package com.intexsoft.service.enyityservice;
 
 import com.intexsoft.dao.model.Publisher;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PublisherService {
     List<Publisher> findAll();
 
     Publisher findById(Long id);
 
-    Publisher findByName(String name);
+    Optional<Publisher> findByName(String name);
 
     boolean existByName(String name);
 

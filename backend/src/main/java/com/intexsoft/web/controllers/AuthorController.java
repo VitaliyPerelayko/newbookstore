@@ -1,9 +1,9 @@
 package com.intexsoft.web.controllers;
 
 import com.intexsoft.dao.model.Author;
-import com.intexsoft.service.AuthorService;
+import com.intexsoft.service.enyityservice.AuthorService;
 import com.intexsoft.web.dto.AuthorDTO;
-import com.intexsoft.web.mapping.CustomMapping;
+import com.intexsoft.web.dto.mapping.AuthorDTOMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -23,30 +23,30 @@ public class AuthorController {
 
     private final static Logger LOGGER = LogManager.getLogger(AuthorController.class);
     private final AuthorService authorService;
-    private final CustomMapping customMapping;
+    private final AuthorDTOMapper authorDTOMapper;
 
-    public AuthorController(AuthorService authorService, CustomMapping customMapping) {
+    public AuthorController(AuthorService authorService, AuthorDTOMapper authorDTOMapper) {
         this.authorService = authorService;
-        this.customMapping = customMapping;
+        this.authorDTOMapper = authorDTOMapper;
     }
 
     @GetMapping
     public ResponseEntity<List<AuthorDTO>> getAll() {
         List<Author> authors = authorService.findAll();
         return ResponseEntity.ok(authors.stream().
-                map(customMapping::mapAuthorToAuthorDTO).collect(Collectors.toList()));
+                map(authorDTOMapper::mapAuthorToAuthorDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> getOne(@PathVariable Long id) {
-        AuthorDTO authorDTO = customMapping.mapAuthorToAuthorDTO(authorService.findById(id));
+        AuthorDTO authorDTO = authorDTOMapper.mapAuthorToAuthorDTO(authorService.findById(id));
         return ResponseEntity.ok(authorDTO);
     }
 
     @PostMapping
     public ResponseEntity<AuthorDTO> save(@Valid @RequestBody AuthorDTO authorDTO) {
-        AuthorDTO authorResponseDTO = customMapping.mapAuthorToAuthorDTO(authorService.save(
-                customMapping.mapAuthorDTOToAuthor(authorDTO)));
+        AuthorDTO authorResponseDTO = authorDTOMapper.mapAuthorToAuthorDTO(authorService.save(
+                authorDTOMapper.mapAuthorDTOToAuthor(authorDTO)));
         return ResponseEntity.ok(authorResponseDTO);
     }
 
@@ -57,8 +57,8 @@ public class AuthorController {
             LOGGER.error(e);
             throw e;
         }
-        AuthorDTO authorResponseDTO = customMapping.mapAuthorToAuthorDTO(authorService.update(
-                customMapping.mapAuthorDTOToAuthor(authorDTO)));
+        AuthorDTO authorResponseDTO = authorDTOMapper.mapAuthorToAuthorDTO(authorService.update(
+                authorDTOMapper.mapAuthorDTOToAuthor(authorDTO)));
         return ResponseEntity.ok(authorResponseDTO);
     }
 

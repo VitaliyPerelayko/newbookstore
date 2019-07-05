@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @XmlRootElement(name = "book")
-public class BookPOJO {
+public class BookPOJO implements ObjectsForXmlBindings {
 
     @NotBlank(message = "bookPOJO.name.notBlank")
     @Size(max = 50, message = "bookPOJO.name.size")
@@ -79,7 +79,8 @@ public class BookPOJO {
         this.name = name;
     }
 
-    public String getCode() {
+    @Override
+    public String getUniqueValue() {
         return code;
     }
 
@@ -162,6 +163,7 @@ public class BookPOJO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, category);
+        return Objects.hash(name, code, description, authors, publishDate, publisher,
+                price, category);
     }
 }

@@ -1,24 +1,20 @@
 package com.intexsoft.service.importdata.impl;
 
 import com.intexsoft.service.importdata.ImportData;
-import com.intexsoft.service.importdata.pojo.AuthorPOJO;
-import com.intexsoft.service.importdata.pojo.BookPOJO;
-import com.intexsoft.service.importdata.pojo.Data;
-import com.intexsoft.service.importdata.pojo.PublisherPOJO;
+import com.intexsoft.service.importdata.pojo.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Service for importing data from xml file
@@ -29,123 +25,83 @@ public class ImportDataJAXBImpl implements ImportData {
     private final static Logger LOGGER = LogManager.getLogger(ImportDataJAXBImpl.class);
     private final static Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private final static String WARNINGMESSAGE = " wasn't imported from xml, because of invalid data";
-    private final static String INFOMESSAGE = "There ware imported ";
-
     /**
      * import data from xml file
      * Entity will not imported if it's invalid
+     * (remark: if there are duplicates of authors then will imported only the last of them)
      *
      * @return List of AuthorsPOJO
      */
     @Override
     public List<AuthorPOJO> importAuthors(String path) {
         List<AuthorPOJO> authorList = unmarshallData(path).getAuthorsList();
-        Iterator<AuthorPOJO> iterator = authorList.iterator();
-        while (iterator.hasNext()) {
-            AuthorPOJO authorPOJO = iterator.next();
-            if (valid(authorPOJO).get()) {
-                LOGGER.warn("Entity Author with name " + authorPOJO.getName() + WARNINGMESSAGE);
-                iterator.remove();
-            }
-        }
-        authorList = filterDuplicateAuthors(authorList);
-        LOGGER.info(INFOMESSAGE + authorList.size() + " authors");
-        return filterDuplicateAuthors(authorList);
+
+        List<AuthorPOJO> authorPOJOList = new ArrayList<>(getImportedData(authorList));
+        LOGGER.info("There ware imported {} authors", authorPOJOList.size());
+        return authorPOJOList;
     }
 
     /**
      * import data from xml file
      * Entity will not imported if it's invalid
+     * (remark: if there are duplicates of books then will imported only the last of them)
      *
      * @return List of BooksPOJO
      */
     @Override
     public List<BookPOJO> importBooks(String path) {
         List<BookPOJO> bookList = unmarshallData(path).getBooksList();
-        Iterator<BookPOJO> iterator = bookList.iterator();
-        while (iterator.hasNext()) {
-            BookPOJO bookPOJO = iterator.next();
-            if (valid(bookPOJO).get()) {
-                LOGGER.warn("Entity Book with code " + bookPOJO.getCode() + WARNINGMESSAGE);
-                iterator.remove();
-            }
-        }
-        bookList = filterDuplicateBooks(bookList);
-        LOGGER.info(INFOMESSAGE + bookList.size() + " books");
-        return bookList;
+
+        List<BookPOJO> bookPOJOList = new ArrayList<>(getImportedData(bookList));
+        LOGGER.info("There ware imported {} books", bookPOJOList.size());
+        return bookPOJOList;
     }
 
     /**
      * import data from xml file
      * Entity will not imported if it's invalid
+     * (remark: if there are duplicates of publishers then will imported only the last of them)
+
      *
      * @return List of PublishersPOJO
      */
     @Override
     public List<PublisherPOJO> importPublishers(String path) {
         List<PublisherPOJO> publisherList = unmarshallData(path).getPublishersList();
-        Iterator<PublisherPOJO> iterator = publisherList.iterator();
 
-        while (iterator.hasNext()) {
-            PublisherPOJO publisherPOJO = iterator.next();
-            if (valid(publisherPOJO).get()) {
-                LOGGER.warn("Entity publisher with name " + publisherPOJO.getName() + WARNINGMESSAGE);
-                iterator.remove();
-            }
+        List<PublisherPOJO> publisherPOJOList = new ArrayList<>(getImportedData(publisherList));
+        LOGGER.info("There ware imported {} publishers", publisherPOJOList.size());
+        return publisherPOJOList;
+    }
+
+
+    private <T extends ObjectsForXmlBindings> Collection<T> getImportedData(List<T> list) {
+        Stream<T> stream = list.stream().filter(this::valid);
+        final HashMap<String, T> uniqueValues = new HashMap<>();
+        stream.forEach(value -> uniqueValues.put(value.getUniqueValue(), value));
+        return uniqueValues.values();
+    }
+
+    private <T extends ObjectsForXmlBindings> boolean valid(T object) {
+        Set<ConstraintViolation<T>> violationSet = VALIDATOR.validate(object);
+        if (violationSet.isEmpty()) {
+            return true;
+        } else {
+            violationSet.forEach(LOGGER::error);
+            LOGGER.warn("Entity {} with name or code \"{}\" wasn't imported from xml, because of invalid data",
+                    object.getClass().getSimpleName(), object.getUniqueValue());
         }
-        publisherList = filterDuplicatePublishers(publisherList);
-        LOGGER.info(INFOMESSAGE + publisherList.size() + " publishers");
-        return publisherList;
+        return false;
     }
 
-    private List<PublisherPOJO> filterDuplicatePublishers(List<PublisherPOJO> list) {
-        List<PublisherPOJO> newList = new ArrayList<>();
-        list.forEach(publisherPOJO -> {
-            if (newList.stream().noneMatch(newListPublisher -> publisherPOJO.getName().equals(newListPublisher.getName()))) {
-                newList.add(publisherPOJO);
-            }
-        });
-        return newList;
-    }
-
-    private List<AuthorPOJO> filterDuplicateAuthors(List<AuthorPOJO> list) {
-        List<AuthorPOJO> newList = new ArrayList<>();
-        list.forEach(authorPOJO -> {
-            if (newList.stream().noneMatch(newListAuthor -> authorPOJO.getName().equals(newListAuthor.getName()))) {
-                newList.add(authorPOJO);
-            }
-        });
-        return newList;
-    }
-
-    private List<BookPOJO> filterDuplicateBooks(List<BookPOJO> list) {
-        List<BookPOJO> newList = new ArrayList<>();
-        list.forEach(bookPOJO -> {
-            if (newList.stream().noneMatch(newListBook -> bookPOJO.getCode().equals(newListBook.getCode()))) {
-                newList.add(bookPOJO);
-            }
-        });
-        return newList;
-    }
-
-    private <T> AtomicBoolean valid(T object) {
-        AtomicBoolean fail = new AtomicBoolean(false);
-        VALIDATOR.validate(object).forEach(violation -> {
-            LOGGER.error(violation.getMessage());
-            fail.set(true);
-        });
-        return fail;
-    }
-
-    private Data unmarshallData(String path) {
-        Data data;
+    private InformationFromXmlFile unmarshallData(String path) {
+        InformationFromXmlFile informationFromXmlFile;
         try {
-            data = (Data) JAXBContext.newInstance(Data.class).createUnmarshaller().
+            informationFromXmlFile = (InformationFromXmlFile) JAXBContext.newInstance(InformationFromXmlFile.class).createUnmarshaller().
                     unmarshal(new FileReader(path));
         } catch (JAXBException | FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        return data;
+        return informationFromXmlFile;
     }
 }

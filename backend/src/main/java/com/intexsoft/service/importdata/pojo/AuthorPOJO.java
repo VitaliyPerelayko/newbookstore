@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @XmlRootElement(name = "author")
-public class AuthorPOJO {
+public class AuthorPOJO implements ObjectsForXmlBindings {
 
     @NotBlank(message = "authorPOJO.name.notBlank")
     @Size(max = 50, message = "authorPOJO.name.size")
@@ -39,7 +39,8 @@ public class AuthorPOJO {
     public AuthorPOJO() {
     }
 
-    public String getName() {
+    @Override
+    public String getUniqueValue() {
         return name;
     }
 
@@ -79,6 +80,6 @@ public class AuthorPOJO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name, bio, birthDate);
     }
 }

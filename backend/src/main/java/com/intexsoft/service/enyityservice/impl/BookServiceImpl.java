@@ -1,14 +1,15 @@
-package com.intexsoft.service.impl;
+package com.intexsoft.service.enyityservice.impl;
 
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.repository.BookRepository;
-import com.intexsoft.service.BookService;
+import com.intexsoft.service.enyityservice.BookService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Implementation of service layer for Road entity.
@@ -53,9 +54,8 @@ public class BookServiceImpl implements BookService {
      * @return book with the given code
      */
     @Override
-    public Book findByCode(String code) {
-        validate(!bookRepository.existsByCode(code), "error.book.code.notExist");
-        return bookRepository.findBookByCode(code);
+    public Optional<Book> findByCode(String code) {
+        return Optional.ofNullable(bookRepository.findBookByCode(code));
     }
 
     /**
@@ -111,10 +111,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<Book> saveBatch(List<Book> books) {
         books.forEach(book -> {
-            String code = book.getCode();
-            if (existByCode(code)) {
-                book.setId(findByCode(code).getId());
-            }
+            Optional<Book> updatedBook = findByCode(book.getCode());
+            updatedBook.ifPresent(value -> book.setCode(value.getCode()));
         });
         return bookRepository.saveAll(books);
     }
@@ -132,8 +130,8 @@ public class BookServiceImpl implements BookService {
         validate(id == null,
                 "error.book.haveNoId");
         isExist(id);
-        Book duplicate = findByCode(book.getCode());
-        validate(id.equals(duplicate.getId()), "error.book.code.notUnique");
+        Optional<Book> duplicate = findByCode(book.getCode());
+        duplicate.ifPresent(value -> validate(id.equals(value.getId()), "error.book.code.notUnique"));
         return bookRepository.saveAndFlush(book);
     }
 
@@ -166,9 +164,7 @@ public class BookServiceImpl implements BookService {
 
     private void validate(boolean expression, String errorMessage) {
         if (expression) {
-            RuntimeException e = new RuntimeException(errorMessage);
-            LOGGER.error(e);
-            throw e;
+            throw new RuntimeException(errorMessage);
         }
     }
 

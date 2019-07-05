@@ -27,21 +27,7 @@ public class WebConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public Mapper mapper() {
-        BeanMappingBuilder builder = new BeanMappingBuilder() {
-
-            @Override
-            protected void configure() {
-                mapping(Author.class, AuthorDTO.class).exclude("birthDate");
-                mapping(Author.class, AuthorPOJO.class).exclude("birthDate");
-                mapping(Book.class, BookRequestDTO.class).exclude("publishDate");
-                mapping(Book.class, BookResponseDTO.class).exclude("publishDate");
-                mapping(Book.class, BookPOJO.class).exclude("publishDate");
-
-            }
-        };
-        DozerBeanMapper mapper = new DozerBeanMapper();
-        mapper.addMapping(builder);
-        return mapper;
+        return new DozerBeanMapper();
     }
 
     @Override

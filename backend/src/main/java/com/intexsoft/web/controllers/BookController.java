@@ -2,11 +2,11 @@ package com.intexsoft.web.controllers;
 
 
 import com.intexsoft.dao.model.Book;
-import com.intexsoft.service.BookService;
+import com.intexsoft.service.enyityservice.BookService;
+import com.intexsoft.web.dto.mapping.BookDTOMapper;
 import com.intexsoft.web.dto.request.BookRequestDTO;
 import com.intexsoft.web.dto.response.BookResponseDTO;
 import com.intexsoft.web.dto.response.BookResponseShortVersionDTO;
-import com.intexsoft.web.mapping.CustomMapping;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.dozer.Mapper;
@@ -27,12 +27,12 @@ public class BookController {
 
     private final static Logger LOGGER = LogManager.getLogger(BookController.class);
     private final BookService bookService;
-    private final CustomMapping mapping;
+    private final BookDTOMapper bookDTOMapper;
     private final Mapper mapper;
 
-    public BookController(BookService bookService, CustomMapping mapping, Mapper mapper) {
+    public BookController(BookService bookService, BookDTOMapper bookDTOMapper, Mapper mapper) {
         this.bookService = bookService;
-        this.mapping = mapping;
+        this.bookDTOMapper = bookDTOMapper;
         this.mapper = mapper;
     }
 
@@ -58,7 +58,7 @@ public class BookController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<BookResponseDTO> getOne(@PathVariable Long id) {
-        BookResponseDTO bookResponseDTO = mapping.mapBookToBookResponseDTO(bookService.findById(id));
+        BookResponseDTO bookResponseDTO = bookDTOMapper.mapBookToBookResponseDTO(bookService.findById(id));
         return ResponseEntity.ok(bookResponseDTO);
     }
 
@@ -70,8 +70,8 @@ public class BookController {
      */
     @PostMapping
     public ResponseEntity<BookResponseDTO> save(@Valid @RequestBody BookRequestDTO bookRequestDTO) {
-        BookResponseDTO bookResponseDTO = mapping.mapBookToBookResponseDTO(bookService.
-                save(mapping.mapBookRequestDTOToBook(bookRequestDTO)));
+        BookResponseDTO bookResponseDTO = bookDTOMapper.mapBookToBookResponseDTO(bookService.
+                save(bookDTOMapper.mapBookRequestDTOToBook(bookRequestDTO)));
         return ResponseEntity.ok(bookResponseDTO);
     }
 
@@ -89,8 +89,8 @@ public class BookController {
             LOGGER.error(e);
             throw e;
         }
-        BookResponseDTO bookResponseDTO = mapping.mapBookToBookResponseDTO(bookService.
-                update(mapping.mapBookRequestDTOToBook(bookRequestDTO)));
+        BookResponseDTO bookResponseDTO = bookDTOMapper.mapBookToBookResponseDTO(bookService.
+                update(bookDTOMapper.mapBookRequestDTOToBook(bookRequestDTO)));
         return ResponseEntity.ok(bookResponseDTO);
     }
 

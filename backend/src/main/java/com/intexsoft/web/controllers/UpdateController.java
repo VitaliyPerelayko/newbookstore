@@ -3,14 +3,17 @@ package com.intexsoft.web.controllers;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Publisher;
-import com.intexsoft.service.AuthorService;
-import com.intexsoft.service.BookService;
-import com.intexsoft.service.PublisherService;
+import com.intexsoft.service.enyityservice.AuthorService;
+import com.intexsoft.service.enyityservice.BookService;
+import com.intexsoft.service.enyityservice.PublisherService;
 import com.intexsoft.service.importdata.ImportData;
+import com.intexsoft.service.importdata.pojo.mapping.AuthorImportMapper;
+import com.intexsoft.service.importdata.pojo.mapping.BookImportMapper;
 import com.intexsoft.web.dto.AuthorDTO;
 import com.intexsoft.web.dto.PublisherDTO;
+import com.intexsoft.web.dto.mapping.AuthorDTOMapper;
+import com.intexsoft.web.dto.mapping.BookDTOMapper;
 import com.intexsoft.web.dto.response.BookResponseDTO;
-import com.intexsoft.web.mapping.CustomMapping;
 import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,23 +35,31 @@ import java.util.stream.Collectors;
 public class UpdateController {
 
     private final ImportData importData;
-    private final CustomMapping customMapping;
     private final Mapper mapper;
     private final PublisherService publisherService;
     private final AuthorService authorService;
     private final BookService bookService;
+    private final BookDTOMapper bookDTOMapper;
+    private final AuthorDTOMapper authorDTOMapper;
+    private final BookImportMapper bookImportMapper;
+    private final AuthorImportMapper authorImportMapper;
+
     @Value("${path.to.data.xml}")
     private String path;
 
-    public UpdateController(@Qualifier("importDataJAXBImpl") ImportData importData, CustomMapping customMapping,
-                            Mapper mapper, PublisherService publisherService, AuthorService authorService,
-                            BookService bookService) {
+    public UpdateController(@Qualifier("importDataJAXBImpl") ImportData importData, Mapper mapper,
+                            PublisherService publisherService, AuthorService authorService, BookService bookService,
+                            BookDTOMapper bookDTOMapper, AuthorDTOMapper authorDTOMapper,
+                            BookImportMapper bookImportMapper, AuthorImportMapper authorImportMapper) {
         this.importData = importData;
-        this.customMapping = customMapping;
         this.mapper = mapper;
         this.publisherService = publisherService;
         this.authorService = authorService;
         this.bookService = bookService;
+        this.bookDTOMapper = bookDTOMapper;
+        this.authorDTOMapper = authorDTOMapper;
+        this.bookImportMapper = bookImportMapper;
+        this.authorImportMapper = authorImportMapper;
     }
 
     /**
@@ -72,7 +83,7 @@ public class UpdateController {
     @GetMapping("/books")
     public ResponseEntity<List<BookResponseDTO>> updateDatabaseBooks() {
         return ResponseEntity.ok(bookService.saveBatch(getBooks()).stream().
-                map(customMapping::mapBookToBookResponseDTO).collect(Collectors.toList()));
+                map(bookDTOMapper::mapBookToBookResponseDTO).collect(Collectors.toList()));
     }
 
     /**
@@ -85,7 +96,7 @@ public class UpdateController {
     @GetMapping("/authors")
     public ResponseEntity<List<AuthorDTO>> updateDatabaseAuthors() {
         return ResponseEntity.ok(authorService.saveBatch(getAuthors()).stream().
-                map(customMapping::mapAuthorToAuthorDTO).collect(Collectors.toList()));
+                map(authorDTOMapper::mapAuthorToAuthorDTO).collect(Collectors.toList()));
     }
 
     /**
@@ -107,10 +118,12 @@ public class UpdateController {
     }
 
     private List<Author> getAuthors() {
-        return importData.importAuthors(path).stream().map(customMapping::mapAuthorPOJOToAuthor).collect(Collectors.toList());
+        return importData.importAuthors(path).stream().
+                map(authorImportMapper::mapAuthorPOJOToAuthor).collect(Collectors.toList());
     }
 
     private List<Book> getBooks() {
-        return importData.importBooks(path).stream().map(customMapping::mapBookPOJOToBook).collect(Collectors.toList());
+        return importData.importBooks(path).stream().
+                map(bookImportMapper::mapBookPOJOToBook).collect(Collectors.toList());
     }
 }

@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class ImportDataJAXBImplTest {
@@ -61,51 +62,58 @@ public class ImportDataJAXBImplTest {
 
     @Test
     public void testImportPublishers() {
-        assertEquals(importData.importPublishers(pathValidFile), publisherList);
+        List<PublisherPOJO> publisherPOJOList = importData.importPublishers(pathValidFile);
+        assertTrue(publisherList.size() == publisherPOJOList.size() &&
+                publisherList.containsAll(publisherPOJOList));
     }
-
 
     @Test
     public void testImportAuthors() {
-        assertEquals(importData.importAuthors(pathValidFile),authorList);
+        List<AuthorPOJO> authorPOJOList = importData.importAuthors(pathValidFile);
+        assertTrue(authorList.size() == authorPOJOList.size() &&
+                authorList.containsAll(authorPOJOList));
     }
 
     @Test
     public void testImportBooks() {
-        assertEquals(importData.importBooks(pathValidFile),bookList);
+        List<BookPOJO> bookPOJOList = importData.importBooks(pathValidFile);
+        assertTrue(bookList.size() == bookPOJOList.size() &&
+                bookList.containsAll(bookPOJOList));
     }
 
     @Test
-    public void testImportPublishersInvalidData(){
+    public void testImportPublishersInvalidData() {
         assertEquals(importData.importPublishers(pathInvalidFile),
                 Collections.singletonList(publisherList.get(0)));
     }
 
     @Test
-    public void testImportAuthorsInvalidData(){
+    public void testImportAuthorsInvalidData() {
         assertEquals(importData.importAuthors(pathInvalidFile),
                 Collections.singletonList(authorList.get(2)));
     }
 
     @Test
-    public void testImportBooksInvalidData(){
+    public void testImportBooksInvalidData() {
         assertEquals(importData.importBooks(pathInvalidFile),
                 Collections.singletonList(bookList.get(1)));
     }
 
     @Test
-    public void testImportPublishersDuplicate(){
-        assertEquals(importData.importPublishers(pathFileDuplicate), publisherList);
+    public void testImportPublishersDuplicate() {
+        List<PublisherPOJO> publisherPOJOList = importData.importPublishers(pathFileDuplicate);
+        assertTrue(publisherList.size() == publisherPOJOList.size() &&
+                publisherList.containsAll(publisherPOJOList));
     }
 
     @Test
-    public void testImportAuthorsDuplicate(){
+    public void testImportAuthorsDuplicate() {
         assertEquals(importData.importAuthors(pathFileDuplicate),
                 Collections.singletonList(authorList.get(2)));
     }
 
     @Test
-    public void testImportBooksDuplicate(){
+    public void testImportBooksDuplicate() {
         assertEquals(importData.importBooks(pathFileDuplicate),
                 Collections.singletonList(bookList.get(1)));
     }

@@ -1,10 +1,11 @@
-package com.intexsoft.service;
+package com.intexsoft.service.enyityservice;
 
 
 import com.intexsoft.dao.model.Author;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service layer for Author entity.
@@ -14,7 +15,7 @@ public interface AuthorService {
 
     Author findById(Long id);
 
-    Author findByName(String name);
+    Optional<Author> findByName(String name);
 
     boolean existByName(String name);
 
