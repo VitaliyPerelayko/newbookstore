@@ -1,4 +1,4 @@
-package com.intexsoft.service.enyityservice;
+package com.intexsoft.service.entityservice;
 
 import com.intexsoft.dao.model.Publisher;
 import org.springframework.transaction.annotation.Transactional;

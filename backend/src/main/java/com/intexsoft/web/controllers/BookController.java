@@ -2,7 +2,7 @@ package com.intexsoft.web.controllers;
 
 
 import com.intexsoft.dao.model.Book;
-import com.intexsoft.service.enyityservice.BookService;
+import com.intexsoft.service.entityservice.BookService;
 import com.intexsoft.web.dto.mapping.BookDTOMapper;
 import com.intexsoft.web.dto.request.BookRequestDTO;
 import com.intexsoft.web.dto.response.BookResponseDTO;

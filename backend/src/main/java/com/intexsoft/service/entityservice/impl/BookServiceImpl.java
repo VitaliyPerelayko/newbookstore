@@ -1,8 +1,8 @@
-package com.intexsoft.service.enyityservice.impl;
+package com.intexsoft.service.entityservice.impl;
 
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.repository.BookRepository;
-import com.intexsoft.service.enyityservice.BookService;
+import com.intexsoft.service.entityservice.BookService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
-package com.intexsoft.service.enyityservice.impl;
+package com.intexsoft.service.entityservice.impl;
 
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.repository.AuthorRepository;
-import com.intexsoft.service.enyityservice.AuthorService;
+import com.intexsoft.service.entityservice.AuthorService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.intexsoft.web.controllers;
 
 import com.intexsoft.dao.model.Author;
-import com.intexsoft.service.enyityservice.AuthorService;
+import com.intexsoft.service.entityservice.AuthorService;
 import com.intexsoft.web.dto.AuthorDTO;
 import com.intexsoft.web.dto.mapping.AuthorDTOMapper;
 import org.apache.logging.log4j.LogManager;

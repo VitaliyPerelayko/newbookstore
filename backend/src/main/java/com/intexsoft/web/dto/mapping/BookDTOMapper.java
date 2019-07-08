@@ -2,8 +2,8 @@ package com.intexsoft.web.dto.mapping;
 
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Category;
-import com.intexsoft.service.enyityservice.AuthorService;
-import com.intexsoft.service.enyityservice.PublisherService;
+import com.intexsoft.service.entityservice.AuthorService;
+import com.intexsoft.service.entityservice.PublisherService;
 import com.intexsoft.web.dto.PublisherDTO;
 import com.intexsoft.web.dto.request.BookRequestDTO;
 import com.intexsoft.web.dto.response.AuthorResponseInBookDTO;

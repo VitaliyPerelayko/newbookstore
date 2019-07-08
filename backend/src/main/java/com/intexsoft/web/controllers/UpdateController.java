@@ -3,9 +3,9 @@ package com.intexsoft.web.controllers;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Publisher;
-import com.intexsoft.service.enyityservice.AuthorService;
-import com.intexsoft.service.enyityservice.BookService;
-import com.intexsoft.service.enyityservice.PublisherService;
+import com.intexsoft.service.entityservice.AuthorService;
+import com.intexsoft.service.entityservice.BookService;
+import com.intexsoft.service.entityservice.PublisherService;
 import com.intexsoft.service.importdata.ImportData;
 import com.intexsoft.service.importdata.pojo.mapping.AuthorImportMapper;
 import com.intexsoft.service.importdata.pojo.mapping.BookImportMapper;
@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,7 +42,15 @@ public class UpdateController {
     private final AuthorImportMapper authorImportMapper;
 
     @Value("${path.to.data.xml}")
-    private String path;
+    private String pathXML;
+    @Value("${path.to.publishers.csv}")
+    private String pathPublishersCSV;
+    @Value("${path.to.authors.csv}")
+    private String pathAuthorsCSV;
+    @Value("${path.to.books.csv}")
+    private String pathBooksCSV;
+    @Value("${path.to.data.json}")
+    private String pathJSON;
 
     public UpdateController(@Qualifier("importDataJAXBImpl") ImportData importData, Mapper mapper,
                             PublisherService publisherService, AuthorService authorService, BookService bookService,
@@ -67,10 +72,10 @@ public class UpdateController {
      */
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public void updateDatabase() {
-        publisherService.saveBatch(getPublishers());
-        authorService.saveBatch(getAuthors());
-        bookService.saveBatch(getBooks());
+    public void updateDatabase(@RequestParam(defaultValue = "json", required = false) String fileType) {
+        publisherService.saveBatch(getPublishers(fileType));
+        authorService.saveBatch(getAuthors(fileType));
+        bookService.saveBatch(getBooks(fileType));
     }
 
     /**
@@ -81,8 +86,9 @@ public class UpdateController {
      * @return ResponseEntity with List of BookResponseDTO
      */
     @GetMapping("/books")
-    public ResponseEntity<List<BookResponseDTO>> updateDatabaseBooks() {
-        return ResponseEntity.ok(bookService.saveBatch(getBooks()).stream().
+    public ResponseEntity<List<BookResponseDTO>> updateDatabaseBooks(
+            @RequestParam(defaultValue = "json", required = false) String fileType) {
+        return ResponseEntity.ok(bookService.saveBatch(getBooks(fileType)).stream().
                 map(bookDTOMapper::mapBookToBookResponseDTO).collect(Collectors.toList()));
     }
 
@@ -94,8 +100,9 @@ public class UpdateController {
      * @return ResponseEntity with List of AuthorDTO
      */
     @GetMapping("/authors")
-    public ResponseEntity<List<AuthorDTO>> updateDatabaseAuthors() {
-        return ResponseEntity.ok(authorService.saveBatch(getAuthors()).stream().
+    public ResponseEntity<List<AuthorDTO>> updateDatabaseAuthors(
+            @RequestParam(defaultValue = "json", required = false) String fileType) {
+        return ResponseEntity.ok(authorService.saveBatch(getAuthors(fileType)).stream().
                 map(authorDTOMapper::mapAuthorToAuthorDTO).collect(Collectors.toList()));
     }
 
@@ -107,23 +114,61 @@ public class UpdateController {
      * @return ResponseEntity with List of PublisherDTO
      */
     @GetMapping("/publishers")
-    public ResponseEntity<List<PublisherDTO>> updateDatabasePublishers() {
-        return ResponseEntity.ok(publisherService.saveBatch(getPublishers()).stream().
+    public ResponseEntity<List<PublisherDTO>> updateDatabasePublishers(
+            @RequestParam(defaultValue = "json", required = false) String fileType) {
+        return ResponseEntity.ok(publisherService.saveBatch(getPublishers(fileType)).stream().
                 map(publisher -> mapper.map(publisher, PublisherDTO.class)).collect(Collectors.toList()));
     }
 
-    private List<Publisher> getPublishers() {
+    private List<Publisher> getPublishers(String fileType) {
+        String path = getPathPublishersCSV(fileType);
         return importData.importPublishers(path).stream().map(publisherPOJO ->
                 mapper.map(publisherPOJO, Publisher.class)).collect(Collectors.toList());
     }
 
-    private List<Author> getAuthors() {
+    private List<Author> getAuthors(String fileType) {
+        String path = getPathAuthorsCSV(fileType);
         return importData.importAuthors(path).stream().
                 map(authorImportMapper::mapAuthorPOJOToAuthor).collect(Collectors.toList());
     }
 
-    private List<Book> getBooks() {
+    private List<Book> getBooks(String fileType) {
+        String path = getPathBooksCSV(fileType);
         return importData.importBooks(path).stream().
                 map(bookImportMapper::mapBookPOJOToBook).collect(Collectors.toList());
+    }
+
+    private String getPath(String fileType) {
+        if ("xml".equals(fileType)) {
+            return pathXML;
+        }
+        if ("json".equals(fileType)) {
+            return pathJSON;
+        }
+        throw new IllegalArgumentException("This file type isn't supported");
+    }
+
+    private String getPathPublishersCSV(String fileType){
+        if ("csv".equals(fileType)){
+            return pathPublishersCSV;
+        }else{
+            return getPath(fileType);
+        }
+    }
+
+    private String getPathAuthorsCSV(String fileType){
+        if ("csv".equals(fileType)){
+            return pathAuthorsCSV;
+        }else{
+            return getPath(fileType);
+        }
+    }
+
+    private String getPathBooksCSV(String fileType){
+        if ("csv".equals(fileType)){
+            return pathBooksCSV;
+        }else{
+            return getPath(fileType);
+        }
     }
 }

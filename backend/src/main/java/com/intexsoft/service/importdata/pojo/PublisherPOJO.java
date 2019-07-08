@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Objects;
 
 @XmlRootElement(name = "publisher")
-public class PublisherPOJO implements ObjectsForXmlBindings {
+public class PublisherPOJO implements ObjectsForBindings {
 
     @NotBlank(message = "publisherPOJO.name.notBlank")
     @Size(max = 50, message = "publisherPOJO.name.size")

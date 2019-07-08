@@ -1,4 +1,4 @@
-package com.intexsoft.service.enyityservice;
+package com.intexsoft.service.entityservice;
 
 import com.intexsoft.dao.model.Book;
 import org.springframework.transaction.annotation.Transactional;

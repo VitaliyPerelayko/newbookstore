@@ -1,6 +1,9 @@
 package com.intexsoft.service.importdata.pojo;
 
-import com.intexsoft.service.importdata.impl.adapters.LocalDateAdapter;
+import com.intexsoft.service.importdata.impl.adapters.csv.LocalDateConverter;
+import com.intexsoft.service.importdata.impl.adapters.xml.LocalDateAdapter;
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvCustomBindByName;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -13,17 +16,21 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @XmlRootElement(name = "author")
-public class AuthorPOJO implements ObjectsForXmlBindings {
+public class AuthorPOJO implements ObjectsForBindings {
 
     @NotBlank(message = "authorPOJO.name.notBlank")
     @Size(max = 50, message = "authorPOJO.name.size")
+    @CsvBindByName(column = "name")
     private String name;
 
     @Size(max = 200, message = "authorPOJO.bio.size")
+    @CsvBindByName(column = "bio")
     private String bio;
 
     @NotNull(message = "authorPOJO.birthDate.notNull")
     @Past(message = "authorPOJO.birthDate.past")
+    @CsvBindByName(column = "birthDate")
+    @CsvCustomBindByName(converter = LocalDateConverter.class)
     private LocalDate birthDate;
 
     public AuthorPOJO(@NotBlank(message = "authorPOJO.name.notBlank")

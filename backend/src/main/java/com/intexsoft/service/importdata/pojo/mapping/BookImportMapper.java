@@ -1,8 +1,8 @@
 package com.intexsoft.service.importdata.pojo.mapping;
 
 import com.intexsoft.dao.model.Book;
-import com.intexsoft.service.enyityservice.AuthorService;
-import com.intexsoft.service.enyityservice.PublisherService;
+import com.intexsoft.service.entityservice.AuthorService;
+import com.intexsoft.service.entityservice.PublisherService;
 import com.intexsoft.service.importdata.pojo.BookPOJO;
 import org.springframework.stereotype.Service;
 

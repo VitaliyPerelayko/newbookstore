@@ -1,7 +1,7 @@
 package com.intexsoft.service.importdata;
 
 import com.intexsoft.dao.model.Category;
-import com.intexsoft.service.importdata.impl.ImportDataJAXBImpl;
+import com.intexsoft.service.importdata.impl.ImportDataOpenCSVImpl;
 import com.intexsoft.service.importdata.pojo.AuthorPOJO;
 import com.intexsoft.service.importdata.pojo.BookPOJO;
 import com.intexsoft.service.importdata.pojo.PublisherPOJO;
@@ -18,12 +18,16 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-public class ImportDataJAXBImplTest {
-
-    private final String pathValidFile = getClass().getClassLoader().getResource("datafordb/xml/valid_data.xml").getPath();
-    private final String pathInvalidFile = getClass().getClassLoader().getResource("datafordb/xml/invalid_data.xml").getPath();
-    private final String pathFileDuplicate = getClass().getClassLoader().getResource("datafordb/xml/duplicate_data.xml").getPath();
+public class ImportDataOpenCSVImplTest {
+    private final String pathValidPublishers = getClass().getClassLoader().getResource("datafordb/csv/publishers.csv").getPath();
+    private final String pathValidAuthors = getClass().getClassLoader().getResource("datafordb/csv/authors.csv").getPath();
+    private final String pathValidBooks = getClass().getClassLoader().getResource("datafordb/csv/books.csv").getPath();
+    private final String pathInvalidPublishers = getClass().getClassLoader().getResource("datafordb/csv/invalid_publishers.csv").getPath();
+    private final String pathInvalidAuthors = getClass().getClassLoader().getResource("datafordb/csv/invalid_authors.csv").getPath();
+    private final String pathInvalidBooks = getClass().getClassLoader().getResource("datafordb/csv/invalid_books.csv").getPath();
+    private final String pathDuplicatePublishers = getClass().getClassLoader().getResource("datafordb/csv/duplicate_publishers.csv").getPath();
+    private final String pathDuplicateAuthors = getClass().getClassLoader().getResource("datafordb/csv/duplicate_authors.csv").getPath();
+    private final String pathDuplicateBooks = getClass().getClassLoader().getResource("datafordb/csv/duplicate_books.csv").getPath();
 
     private final List<AuthorPOJO> authorList = Arrays.asList(
             new AuthorPOJO("Anton Chekhov",
@@ -60,63 +64,64 @@ public class ImportDataJAXBImplTest {
                     "ABS", new BigDecimal("7.99"), Category.HORROR)
     );
 
-    private ImportDataJAXBImpl importData = new ImportDataJAXBImpl();
+    private ImportDataOpenCSVImpl importData = new ImportDataOpenCSVImpl();
 
     @Test
     public void testImportPublishers() {
-        List<PublisherPOJO> publisherPOJOList = importData.importPublishers(pathValidFile);
+        List<PublisherPOJO> publisherPOJOList = importData.importPublishers(pathValidPublishers);
         assertTrue(publisherList.size() == publisherPOJOList.size() &&
                 publisherList.containsAll(publisherPOJOList));
     }
 
     @Test
     public void testImportAuthors() {
-        List<AuthorPOJO> authorPOJOList = importData.importAuthors(pathValidFile);
+        List<AuthorPOJO> authorPOJOList = importData.importAuthors(pathValidAuthors);
         assertTrue(authorList.size() == authorPOJOList.size() &&
                 authorList.containsAll(authorPOJOList));
     }
 
     @Test
     public void testImportBooks() {
-        List<BookPOJO> bookPOJOList = importData.importBooks(pathValidFile);
+        List<BookPOJO> bookPOJOList = importData.importBooks(pathValidBooks);
         assertTrue(bookList.size() == bookPOJOList.size() &&
                 bookList.containsAll(bookPOJOList));
     }
 
     @Test
     public void testImportPublishersInvalidData() {
-        assertEquals(importData.importPublishers(pathInvalidFile),
+        assertEquals(importData.importPublishers(pathInvalidPublishers),
                 Collections.singletonList(publisherList.get(0)));
     }
 
     @Test
     public void testImportAuthorsInvalidData() {
-        assertEquals(importData.importAuthors(pathInvalidFile),
+        assertEquals(importData.importAuthors(pathInvalidAuthors),
                 Collections.singletonList(authorList.get(2)));
     }
 
     @Test
     public void testImportBooksInvalidData() {
-        assertEquals(importData.importBooks(pathInvalidFile),
+        assertEquals(importData.importBooks(pathInvalidBooks),
                 Collections.singletonList(bookList.get(1)));
     }
 
     @Test
     public void testImportPublishersDuplicate() {
-        List<PublisherPOJO> publisherPOJOList = importData.importPublishers(pathFileDuplicate);
+        List<PublisherPOJO> publisherPOJOList = importData.importPublishers(pathDuplicatePublishers);
         assertTrue(publisherList.size() == publisherPOJOList.size() &&
                 publisherList.containsAll(publisherPOJOList));
     }
 
     @Test
     public void testImportAuthorsDuplicate() {
-        assertEquals(importData.importAuthors(pathFileDuplicate),
+        assertEquals(importData.importAuthors(pathDuplicateAuthors),
                 Collections.singletonList(authorList.get(2)));
     }
 
     @Test
     public void testImportBooksDuplicate() {
-        assertEquals(importData.importBooks(pathFileDuplicate),
+        assertEquals(importData.importBooks(pathDuplicateBooks),
                 Collections.singletonList(bookList.get(1)));
     }
 }
+
