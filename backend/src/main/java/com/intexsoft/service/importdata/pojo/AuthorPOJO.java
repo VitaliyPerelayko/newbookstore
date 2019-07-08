@@ -1,5 +1,8 @@
 package com.intexsoft.service.importdata.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.intexsoft.service.importdata.impl.adapters.csv.LocalDateConverter;
 import com.intexsoft.service.importdata.impl.adapters.xml.LocalDateAdapter;
 import com.opencsv.bean.CsvBindByName;
@@ -31,6 +34,8 @@ public class AuthorPOJO implements ObjectsForBindings {
     @Past(message = "authorPOJO.birthDate.past")
     @CsvBindByName(column = "birthDate")
     @CsvCustomBindByName(converter = LocalDateConverter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate birthDate;
 
     public AuthorPOJO(@NotBlank(message = "authorPOJO.name.notBlank")

@@ -1,5 +1,14 @@
 package com.intexsoft.dao.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum Category {
-    HORROR, DRAMA, DETECTIVE, COMEDY
+    @JsonProperty("horror")
+    HORROR,
+    @JsonProperty("drama")
+    DRAMA,
+    @JsonProperty("detective")
+    DETECTIVE,
+    @JsonProperty("comedy")
+    COMEDY
 }

@@ -80,7 +80,7 @@ public class ImportDataJAXBImpl implements ImportData {
             informationFromFile = (InformationFromFile) JAXBContext.newInstance(InformationFromFile.class).createUnmarshaller().
                     unmarshal(fileReader);
         } catch (IOException | JAXBException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
         return informationFromFile;
     }

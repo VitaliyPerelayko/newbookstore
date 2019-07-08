@@ -1,5 +1,7 @@
 package com.intexsoft.service.importdata.pojo;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,10 +10,13 @@ import java.util.List;
 @XmlRootElement(name = "data")
 public class InformationFromFile {
 
+    @JsonAlias("publishers")
     private List<PublisherPOJO> publishersList;
 
+    @JsonAlias("authors")
     private List<AuthorPOJO> authorsList;
 
+    @JsonAlias("books")
     private List<BookPOJO> booksList;
 
     public List<PublisherPOJO> getPublishersList() {
