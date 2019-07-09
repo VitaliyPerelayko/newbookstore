@@ -1,0 +1,88 @@
+{
+  "publishers": [
+    {
+      "name": "AST"
+    },
+    {
+      "name": null
+    },
+    {
+      "nameBrake": "ABS"
+    }
+  ],
+  "authors": [
+    {
+      "bla": "bla",
+      "name": "Anton Chekhov",
+      "bio": "Russian playwright and short-story writer, who is considered to be among the greatest writers of short fiction in history.",
+      "birthDate": "18600129"
+    },
+    {
+      "name": "Ernest Hemingway",
+      "bio": "American journalist, novelist, short-story writer, and sportsman",
+      "birthDate": 18990621
+    },
+    {
+      "nameBreak": "Stephen King",
+      "bio": "American author of horror, supernatural fiction, suspense, science fiction, and fantasy novels.",
+      "birthDate": "1947-09-21"
+    },
+    {
+      "name": "Isaac Asimov",
+      "bio": "American writer and professor of biochemistry at Boston University.",
+      "birthDate": "1920-01-02"
+    }
+  ],
+  "books": [
+    {
+      "nameBreak": "For Whom the Bell Tolls",
+      "code": "0000",
+      "description": "about war",
+      "authors": [
+        "Ernest Hemingway"
+      ],
+      "publishDate": "1940-09-21",
+      "publisher": "AMG",
+      "price": 3.99,
+      "category": "drama"
+    },
+    {
+      "name": "Foundation",
+      "code": "0001",
+      "description": "fantastic",
+      "authors": [
+        "Isaac Asimov"
+      ],
+      "publishDate": "1985-03-23",
+      "publisher": "AST",
+      "price": -5.86,
+      "category": "detective-ve-ve"
+    },
+    {
+      "title": "Anna on the neck",
+      "code": "0002",
+      "description": "funny",
+      "authors": [
+         "Anton Chekhov"
+      ],
+      "publishDate": "1962-01-01",
+      "publisher": "AKG",
+      "price": "1,76",
+      "category": 3
+    },
+    {
+      "title": "Foo",
+      "code": "0003",
+      "description": "foo",
+      "authors": [
+        "Isaac Asimov",
+        "Anton Chekhov"
+      ],
+      "publishDate": "1999-01-01",
+      "publisher": "ABS",
+      "price": 7.88,
+      "category": "horror"
+    }
+  ]
+}
+

@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface ImportData {
 
-    List<AuthorPOJO> importAuthors(String path);
+    List<AuthorPOJO> importAuthors();
 
-    List<BookPOJO> importBooks(String path);
+    List<BookPOJO> importBooks();
 
-    List<PublisherPOJO> importPublishers(String path);
+    List<PublisherPOJO> importPublishers();
 }

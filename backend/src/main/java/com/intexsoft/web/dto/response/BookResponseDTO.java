@@ -1,8 +1,12 @@
 package com.intexsoft.web.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.intexsoft.web.dto.PublisherDTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -20,7 +24,9 @@ public class BookResponseDTO {
 
     private List<AuthorResponseInBookDTO> authorsName;
 
-    private String publishDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate publishDate;
 
     private PublisherDTO publisher;
 
@@ -68,11 +74,11 @@ public class BookResponseDTO {
         this.authorsName = authors;
     }
 
-    public String getPublishDate() {
+    public LocalDate getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(String publishDate) {
+    public void setPublishDate(LocalDate publishDate) {
         this.publishDate = publishDate;
     }
 

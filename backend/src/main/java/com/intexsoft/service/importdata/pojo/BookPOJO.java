@@ -3,11 +3,10 @@ package com.intexsoft.service.importdata.pojo;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.intexsoft.dao.model.Category;
 import com.intexsoft.service.importdata.impl.adapters.csv.BigDecimalConverter;
 import com.intexsoft.service.importdata.impl.adapters.csv.CategoryConverter;
-import com.intexsoft.service.importdata.impl.adapters.csv.LocalDateConverter;
+import com.intexsoft.service.importdata.impl.adapters.json.LocalDateConverter;
 import com.intexsoft.service.importdata.impl.adapters.xml.CategoryAdapter;
 import com.intexsoft.service.importdata.impl.adapters.xml.LocalDateAdapter;
 import com.opencsv.bean.CsvBindAndSplitByName;
@@ -50,9 +49,9 @@ public class BookPOJO implements ObjectsForBindings {
 
     @NotNull(message = "bookPOJO.publishDate.notNull")
     @CsvBindByName(column = "publishDate")
-    @CsvCustomBindByName(converter = LocalDateConverter.class)
+    @CsvCustomBindByName(converter = com.intexsoft.service.importdata.impl.adapters.csv.LocalDateConverter.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonDeserialize(converter = LocalDateConverter.class)
     private LocalDate publishDate;
 
     @NotBlank(message = "bookPOJO.publisher.notBlank")
@@ -63,6 +62,7 @@ public class BookPOJO implements ObjectsForBindings {
     @Positive(message = "bookPOJO.price.positive")
     @CsvBindByName(column = "price")
     @CsvCustomBindByName(converter = BigDecimalConverter.class)
+    @JsonDeserialize(converter = com.intexsoft.service.importdata.impl.adapters.json.BigDecimalConverter.class)
     private BigDecimal price;
 
     @NotNull(message = "bookPOJO.category.notNull")

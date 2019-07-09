@@ -4,39 +4,26 @@ import com.intexsoft.service.importdata.POJOValidator;
 import com.intexsoft.service.importdata.pojo.ObjectsForBindings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
+@Service
 public class POJOValidatorImpl implements POJOValidator {
 
     private final static Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
     private final static Logger LOGGER = LogManager.getLogger(POJOValidatorImpl.class);
 
-    private static POJOValidator instance = null;
-
-    private POJOValidatorImpl(){}
-
-    //TODO: make thread safe
-    public static POJOValidator getValidator(){
-        if (instance == null){
-            instance = new POJOValidatorImpl();
-        }
-        return instance;
-    }
-
     @Override
-    public  <T extends ObjectsForBindings> Collection<T> distinct(List<T> list) {
+    public  <T extends ObjectsForBindings> List<T> validateAndDistinct(List<T> list) {
         Stream<T> stream = list.stream().filter(this::valid);
         final HashMap<String, T> uniqueValues = new HashMap<>();
         stream.forEach(value -> uniqueValues.put(value.getUniqueValue(), value));
-        return uniqueValues.values();
+        return new ArrayList<>(uniqueValues.values());
     }
 
     @Override

@@ -41,17 +41,6 @@ public class UpdateController {
     private final BookImportMapper bookImportMapper;
     private final AuthorImportMapper authorImportMapper;
 
-    @Value("${path.to.data.xml}")
-    private String pathXML;
-    @Value("${path.to.publishers.csv}")
-    private String pathPublishersCSV;
-    @Value("${path.to.authors.csv}")
-    private String pathAuthorsCSV;
-    @Value("${path.to.books.csv}")
-    private String pathBooksCSV;
-    @Value("${path.to.data.json}")
-    private String pathJSON;
-
     public UpdateController(@Qualifier("importDataJAXBImpl") ImportData importData, Mapper mapper,
                             PublisherService publisherService, AuthorService authorService, BookService bookService,
                             BookDTOMapper bookDTOMapper, AuthorDTOMapper authorDTOMapper,
@@ -72,10 +61,10 @@ public class UpdateController {
      */
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public void updateDatabase(@RequestParam(defaultValue = "json", required = false) String fileType) {
-        publisherService.saveBatch(getPublishers(fileType));
-        authorService.saveBatch(getAuthors(fileType));
-        bookService.saveBatch(getBooks(fileType));
+    public void updateDatabase() {
+        publisherService.saveBatch(getPublishers());
+        authorService.saveBatch(getAuthors());
+        bookService.saveBatch(getBooks());
     }
 
     /**
@@ -86,9 +75,8 @@ public class UpdateController {
      * @return ResponseEntity with List of BookResponseDTO
      */
     @GetMapping("/books")
-    public ResponseEntity<List<BookResponseDTO>> updateDatabaseBooks(
-            @RequestParam(defaultValue = "json", required = false) String fileType) {
-        return ResponseEntity.ok(bookService.saveBatch(getBooks(fileType)).stream().
+    public ResponseEntity<List<BookResponseDTO>> updateDatabaseBooks() {
+        return ResponseEntity.ok(bookService.saveBatch(getBooks()).stream().
                 map(bookDTOMapper::mapBookToBookResponseDTO).collect(Collectors.toList()));
     }
 
@@ -100,9 +88,8 @@ public class UpdateController {
      * @return ResponseEntity with List of AuthorDTO
      */
     @GetMapping("/authors")
-    public ResponseEntity<List<AuthorDTO>> updateDatabaseAuthors(
-            @RequestParam(defaultValue = "json", required = false) String fileType) {
-        return ResponseEntity.ok(authorService.saveBatch(getAuthors(fileType)).stream().
+    public ResponseEntity<List<AuthorDTO>> updateDatabaseAuthors() {
+        return ResponseEntity.ok(authorService.saveBatch(getAuthors()).stream().
                 map(authorDTOMapper::mapAuthorToAuthorDTO).collect(Collectors.toList()));
     }
 
@@ -114,61 +101,23 @@ public class UpdateController {
      * @return ResponseEntity with List of PublisherDTO
      */
     @GetMapping("/publishers")
-    public ResponseEntity<List<PublisherDTO>> updateDatabasePublishers(
-            @RequestParam(defaultValue = "json", required = false) String fileType) {
-        return ResponseEntity.ok(publisherService.saveBatch(getPublishers(fileType)).stream().
+    public ResponseEntity<List<PublisherDTO>> updateDatabasePublishers() {
+        return ResponseEntity.ok(publisherService.saveBatch(getPublishers()).stream().
                 map(publisher -> mapper.map(publisher, PublisherDTO.class)).collect(Collectors.toList()));
     }
 
-    private List<Publisher> getPublishers(String fileType) {
-        String path = getPathPublishersCSV(fileType);
-        return importData.importPublishers(path).stream().map(publisherPOJO ->
+    private List<Publisher> getPublishers() {
+        return importData.importPublishers().stream().map(publisherPOJO ->
                 mapper.map(publisherPOJO, Publisher.class)).collect(Collectors.toList());
     }
 
-    private List<Author> getAuthors(String fileType) {
-        String path = getPathAuthorsCSV(fileType);
-        return importData.importAuthors(path).stream().
+    private List<Author> getAuthors() {
+        return importData.importAuthors().stream().
                 map(authorImportMapper::mapAuthorPOJOToAuthor).collect(Collectors.toList());
     }
 
-    private List<Book> getBooks(String fileType) {
-        String path = getPathBooksCSV(fileType);
-        return importData.importBooks(path).stream().
+    private List<Book> getBooks() {
+        return importData.importBooks().stream().
                 map(bookImportMapper::mapBookPOJOToBook).collect(Collectors.toList());
-    }
-
-    private String getPath(String fileType) {
-        if ("xml".equals(fileType)) {
-            return pathXML;
-        }
-        if ("json".equals(fileType)) {
-            return pathJSON;
-        }
-        throw new IllegalArgumentException("This file type isn't supported");
-    }
-
-    private String getPathPublishersCSV(String fileType){
-        if ("csv".equals(fileType)){
-            return pathPublishersCSV;
-        }else{
-            return getPath(fileType);
-        }
-    }
-
-    private String getPathAuthorsCSV(String fileType){
-        if ("csv".equals(fileType)){
-            return pathAuthorsCSV;
-        }else{
-            return getPath(fileType);
-        }
-    }
-
-    private String getPathBooksCSV(String fileType){
-        if ("csv".equals(fileType)){
-            return pathBooksCSV;
-        }else{
-            return getPath(fileType);
-        }
     }
 }

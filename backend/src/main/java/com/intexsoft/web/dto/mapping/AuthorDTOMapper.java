@@ -14,7 +14,7 @@ public class AuthorDTOMapper {
         author.setId(authorDTO.getId());
         author.setName(authorDTO.getName());
         author.setBio(authorDTO.getBio());
-        author.setBirthDate(LocalDate.parse(authorDTO.getBirthDate()));
+        author.setBirthDate(authorDTO.getBirthDate());
         return author;
     }
 
@@ -23,7 +23,7 @@ public class AuthorDTOMapper {
         authorDTO.setId(author.getId());
         authorDTO.setName(author.getName());
         authorDTO.setBio(author.getBio());
-        authorDTO.setBirthDate(author.getBirthDate().toString());
+        authorDTO.setBirthDate(author.getBirthDate());
         return authorDTO;
     }
 }

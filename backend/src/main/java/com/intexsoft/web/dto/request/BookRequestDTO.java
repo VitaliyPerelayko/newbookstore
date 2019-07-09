@@ -1,7 +1,12 @@
 package com.intexsoft.web.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public class BookRequestDTO {
@@ -25,8 +30,10 @@ public class BookRequestDTO {
             @NotBlank(message = "Each author name must be not blank")
                     String> authors;
 
-    @NotBlank(message = "Publish date of book must be not blank")
-    private String publishDate;
+    @NotNull(message = "Publish date of book must be not null")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    private LocalDate publishDate;
 
     @NotBlank(message = "Publisher of book must be mot blank")
     private String publisher;
@@ -78,11 +85,11 @@ public class BookRequestDTO {
         this.authors = authors;
     }
 
-    public String getPublishDate() {
+    public LocalDate getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(String publishDate) {
+    public void setPublishDate(LocalDate publishDate) {
         this.publishDate = publishDate;
     }
 

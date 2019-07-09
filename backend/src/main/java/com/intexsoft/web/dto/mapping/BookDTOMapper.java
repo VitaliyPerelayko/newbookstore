@@ -41,7 +41,7 @@ public class BookDTOMapper {
         bookResponseDTO.setAuthors(book.getAuthors().stream().
                 map(author -> mapper.map(author, AuthorResponseInBookDTO.class)).collect(Collectors.toList()));
         bookResponseDTO.setPublisher(mapper.map(book.getPublisher(), PublisherDTO.class));
-        bookResponseDTO.setPublishDate(book.getPublishDate().toString());
+        bookResponseDTO.setPublishDate(book.getPublishDate());
         return bookResponseDTO;
     }
 
@@ -58,7 +58,7 @@ public class BookDTOMapper {
                         orElseThrow(() ->
                                 new NoSuchElementException("author with the given name wasn't found in database"))).
                 collect(Collectors.toSet()));
-        book.setPublishDate(LocalDate.parse(bookRequestDTO.getPublishDate()));
+        book.setPublishDate(bookRequestDTO.getPublishDate());
         book.setPublisher(publisherService.findByName(bookRequestDTO.getPublisher()).orElseThrow(() ->
                         new NoSuchElementException("publisher with the given name wasn't found in database")));
         return book;

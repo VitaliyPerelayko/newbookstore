@@ -1,16 +1,16 @@
-package com.intexsoft.service.importdata.impl.adapters.csv;
+package com.intexsoft.service.importdata.impl.adapters.json;
 
-import com.opencsv.bean.AbstractBeanField;
+import com.fasterxml.jackson.databind.util.StdConverter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 
-public class BigDecimalConverter extends AbstractBeanField<BigDecimal> {
+public class BigDecimalConverter extends StdConverter<String, BigDecimal> {
     private final static Logger LOGGER = LogManager.getLogger(BigDecimalConverter.class);
 
     @Override
-    protected Object convert(String value) {
+    public BigDecimal convert(String value) {
         BigDecimal price;
         try {
             price = new BigDecimal(value);

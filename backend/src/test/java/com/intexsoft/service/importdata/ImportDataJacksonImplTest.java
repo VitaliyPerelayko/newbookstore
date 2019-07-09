@@ -1,7 +1,7 @@
 package com.intexsoft.service.importdata;
 
 import com.intexsoft.dao.model.Category;
-import com.intexsoft.service.importdata.impl.ImportDataJAXBImpl;
+import com.intexsoft.service.importdata.impl.ImportDataJacksonImpl;
 import com.intexsoft.service.importdata.pojo.AuthorPOJO;
 import com.intexsoft.service.importdata.pojo.BookPOJO;
 import com.intexsoft.service.importdata.pojo.PublisherPOJO;
@@ -27,10 +27,10 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ImportDataJAXBImplTest {
+public class ImportDataJacksonImplTest {
 
-    private final String pathValidFile = getClass().getClassLoader().getResource("datafordb/xml/valid_data.xml").getPath();
-    private final String pathInvalidFile = getClass().getClassLoader().getResource("datafordb/xml/invalid_data.xml").getPath();
+    private final String pathValidFile = getClass().getClassLoader().getResource("datafordb/json/valid_data.json").getPath();
+    private final String pathInvalidFile = getClass().getClassLoader().getResource("datafordb/json/invalid_data.json").getPath();
 
     private final List<AuthorPOJO> authorList = Arrays.asList(
             new AuthorPOJO("Anton Chekhov",
@@ -68,7 +68,7 @@ public class ImportDataJAXBImplTest {
     );
 
     @InjectMocks
-    private ImportDataJAXBImpl importer;
+    private ImportDataJacksonImpl importer;
     @Mock
     private POJOValidator validator;
 
@@ -104,9 +104,11 @@ public class ImportDataJAXBImplTest {
     public void testImportAuthorsInvalidData() {
         setConditions(pathInvalidFile);
         List<AuthorPOJO> authors = importer.importAuthors();
-        assertEquals(authors.size(), 2);
+        assertEquals(authors.size(), 4);
         assertSame(authors.get(0).getBirthDate(), null);
-        assertSame(authors.get(1).getBio(), null);
+        assertSame(authors.get(1).getBirthDate(), null);
+        assertSame(authors.get(2).getUniqueValue(), null);
+        assertEquals(authors.get(3), authorList.get(3));
     }
 
     @Test
@@ -114,11 +116,13 @@ public class ImportDataJAXBImplTest {
         setConditions(pathInvalidFile);
         List<BookPOJO> books = importer.importBooks();
         assertEquals(books.size(), 4);
-        assertSame(books.get(0).getPublishDate(), null);
+        assertSame(books.get(0).getName(), null);
+        assertEquals(books.get(0).getPrice(), new BigDecimal("3.99"));
+        assertEquals(books.get(1).getName(), "Foundation");
         assertSame(books.get(1).getCategory(), null);
-        assertSame(books.get(2).getAuthors(), null);
-        assertEquals(books.get(3).getAuthors(), Collections.singleton("Anton Chekhov"));
-        assertSame(books.get(3).getPrice(), null);
+        assertEquals(books.get(1).getPrice(), new BigDecimal("-5.86"));
+        assertEquals(books.get(2).getCategory(), Category.COMEDY);
+        assertSame(books.get(2).getPrice(), null);
     }
 
     private void setConditions(String path) {

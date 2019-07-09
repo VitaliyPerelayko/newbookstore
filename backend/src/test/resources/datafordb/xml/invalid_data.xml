@@ -3,18 +3,16 @@
     <publishers>
         <publisher>
             <name>AST</name>
+            <bla>bla</bla>
         </publisher>
         <publisher>
-            <!-- null -->
 
         </publisher>
+        <publisherBreak>
+            <name>AKG</name>
+        </publisherBreak>
         <publisher>
-            <!-- blank -->
-            <name> </name>
-        </publisher>
-        <publisher>
-            <!-- size -->
-            <name>AMGjklsdaglsdfngjlsbnvlsda n;fgvlarhnvkl;vhaocm;lfblsdnvlsncl;asnc;nasv;ksd;lvbnlcnlcvbdlsjvblsdvlsdfvbsldlsdvsdvnsdlvnsdlvnsdlvnsdlkvnsdlklsdnvlsdknvklsdnv</name>
+            <nameBreak>AMG</nameBreak>
         </publisher>
     </publishers>
 
@@ -22,28 +20,23 @@
         <author>
             <name>Anton Chekhov</name>
             <bio>Russian playwright and short-story writer, who is considered to be among the greatest writers of short fiction in history.</bio>
-            <!-- born in the future -->
-            <birthDate>2019-09-29</birthDate>
+            <birthDate>birthDate</birthDate>
         </author>
         <author>
-            <name>    </name>
-            <bio>American journalist, novelist, short-story writer, and sportsman</bio>
-            <!-- invalid date -->
-            <birthDate>189921</birthDate>
+            <name>Ernest Hemingway</name>
+            <biography>American journalist, novelist, short-story writer, and sportsman</biography>
+            <birthDate>1899-06-21</birthDate>
         </author>
-        <author>
+        <authorBreak>
             <name>Stephen King</name>
             <bio>American author of horror, supernatural fiction, suspense, science fiction, and fantasy novels.</bio>
             <birthDate>1947-09-21</birthDate>
-        </author>
-        <author>
+        </authorBreak>
+        <authorBreak>
             <name>Isaac Asimov</name>
-            <bio>American writer and professor of biochemistry at Boston University. jkfgfhglhfgkljhadfghrghrfg
-                gsdfgkfpfidasjgpfiojgpsfdjgsiofdjh ihsoihgrioehg ohga hgiorhgiorahg iphgaiopghrio ghal;fagfd
-                gharhr erhraehrthtrjhrttykuykgsrtjuykfuyktshtyjuykyfghrhiorjhglnflgknerihgbi
-            </bio>
+            <bio>American writer and professor of biochemistry at Boston University.</bio>
             <birthDate>1920-01-02</birthDate>
-        </author>
+        </authorBreak>
     </authors>
 
     <books>
@@ -54,10 +47,9 @@
             <authors>
                 <name>Ernest Hemingway</name>
             </authors>
-            <publishDate>1940-09-21</publishDate>
+            <publishDate>publishDate</publishDate>
             <publisher>AMG</publisher>
-            <!-- negative price -->
-            <price>-99</price>
+            <price>3.99</price>
             <category>drama</category>
         </book>
         <book>
@@ -70,18 +62,18 @@
             <publishDate>1985-03-23</publishDate>
             <publisher>AST</publisher>
             <price>5.86</price>
-            <category>detective</category>
+            <category>detective-ive-ive</category>
         </book>
         <book>
             <title>Anna on the neck</title>
-            <code>00020000000000000000000000000000000000000000000000000000000000000000000000000</code>
+            <code>0002</code>
             <description>funny</description>
-            <authors>
+            <authorsBreack>
                 <name>Anton Chekhov</name>
-            </authors>
+            </authorsBreack>
             <publishDate>1962-01-01</publishDate>
             <publisher>AKG</publisher>
-            <price>price</price>
+            <price>1.76</price>
             <category>comedy</category>
         </book>
         <book>
@@ -89,13 +81,12 @@
             <code>0003</code>
             <description>foo</description>
             <authors>
-                <name>Isaac Asimov</name>
-                <!-- blank -->
-                <name> </name>
+                <nameBreak>Isaac Asimov</nameBreak>
+                <name>Anton Chekhov</name>
             </authors>
             <publishDate>1999-01-01</publishDate>
             <publisher>ABS</publisher>
-            <price>7.99</price>
+            <price>7,99</price>
             <category>horror</category>
         </book>
     </books>

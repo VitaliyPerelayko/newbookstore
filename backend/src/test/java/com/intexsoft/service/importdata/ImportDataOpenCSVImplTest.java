@@ -6,6 +6,11 @@ import com.intexsoft.service.importdata.pojo.AuthorPOJO;
 import com.intexsoft.service.importdata.pojo.BookPOJO;
 import com.intexsoft.service.importdata.pojo.PublisherPOJO;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,9 +20,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class ImportDataOpenCSVImplTest {
     private final String pathValidPublishers = getClass().getClassLoader().getResource("datafordb/csv/publishers.csv").getPath();
     private final String pathValidAuthors = getClass().getClassLoader().getResource("datafordb/csv/authors.csv").getPath();
@@ -25,9 +33,6 @@ public class ImportDataOpenCSVImplTest {
     private final String pathInvalidPublishers = getClass().getClassLoader().getResource("datafordb/csv/invalid_publishers.csv").getPath();
     private final String pathInvalidAuthors = getClass().getClassLoader().getResource("datafordb/csv/invalid_authors.csv").getPath();
     private final String pathInvalidBooks = getClass().getClassLoader().getResource("datafordb/csv/invalid_books.csv").getPath();
-    private final String pathDuplicatePublishers = getClass().getClassLoader().getResource("datafordb/csv/duplicate_publishers.csv").getPath();
-    private final String pathDuplicateAuthors = getClass().getClassLoader().getResource("datafordb/csv/duplicate_authors.csv").getPath();
-    private final String pathDuplicateBooks = getClass().getClassLoader().getResource("datafordb/csv/duplicate_books.csv").getPath();
 
     private final List<AuthorPOJO> authorList = Arrays.asList(
             new AuthorPOJO("Anton Chekhov",
@@ -64,64 +69,59 @@ public class ImportDataOpenCSVImplTest {
                     "ABS", new BigDecimal("7.99"), Category.HORROR)
     );
 
-    private ImportDataOpenCSVImpl importData = new ImportDataOpenCSVImpl();
+    @InjectMocks
+    private ImportDataOpenCSVImpl importer;
+    @Mock
+    private POJOValidator validator;
 
     @Test
     public void testImportPublishers() {
-        List<PublisherPOJO> publisherPOJOList = importData.importPublishers(pathValidPublishers);
-        assertTrue(publisherList.size() == publisherPOJOList.size() &&
-                publisherList.containsAll(publisherPOJOList));
+        ReflectionTestUtils.setField(importer, "pathToPublishers", pathValidPublishers);
+        when(validator.validateAndDistinct(anyList())).thenAnswer(returnsFirstArg());
+        assertEquals(importer.importPublishers(), publisherList);
     }
 
     @Test
     public void testImportAuthors() {
-        List<AuthorPOJO> authorPOJOList = importData.importAuthors(pathValidAuthors);
-        assertTrue(authorList.size() == authorPOJOList.size() &&
-                authorList.containsAll(authorPOJOList));
+        ReflectionTestUtils.setField(importer, "pathToAuthors", pathValidAuthors);
+        when(validator.validateAndDistinct(anyList())).thenAnswer(returnsFirstArg());
+        assertEquals(importer.importAuthors(), authorList);
     }
 
     @Test
     public void testImportBooks() {
-        List<BookPOJO> bookPOJOList = importData.importBooks(pathValidBooks);
-        assertTrue(bookList.size() == bookPOJOList.size() &&
-                bookList.containsAll(bookPOJOList));
+        ReflectionTestUtils.setField(importer, "pathToBooks", pathValidBooks);
+        when(validator.validateAndDistinct(anyList())).thenAnswer(returnsFirstArg());
+        assertEquals(importer.importBooks(), bookList);
     }
 
     @Test
     public void testImportPublishersInvalidData() {
-        assertEquals(importData.importPublishers(pathInvalidPublishers),
-                Collections.singletonList(publisherList.get(0)));
+        ReflectionTestUtils.setField(importer, "pathToPublishers", pathInvalidPublishers);
+        when(validator.validateAndDistinct(anyList())).thenAnswer(returnsFirstArg());
+        importer.importPublishers().forEach(publisher -> assertSame(publisher.getUniqueValue(), null));
     }
 
     @Test
     public void testImportAuthorsInvalidData() {
-        assertEquals(importData.importAuthors(pathInvalidAuthors),
-                Collections.singletonList(authorList.get(2)));
+        ReflectionTestUtils.setField(importer, "pathToAuthors", pathInvalidAuthors);
+        when(validator.validateAndDistinct(anyList())).thenAnswer(returnsFirstArg());
+        List<AuthorPOJO> authors = importer.importAuthors();
+        assertSame(authors.get(0).getBirthDate(), null);
+        assertEquals(authors.get(2), authorList.get(2));
+        assertNotNull(authors.get(3).getUniqueValue());
     }
 
     @Test
     public void testImportBooksInvalidData() {
-        assertEquals(importData.importBooks(pathInvalidBooks),
-                Collections.singletonList(bookList.get(1)));
-    }
-
-    @Test
-    public void testImportPublishersDuplicate() {
-        List<PublisherPOJO> publisherPOJOList = importData.importPublishers(pathDuplicatePublishers);
-        assertTrue(publisherList.size() == publisherPOJOList.size() &&
-                publisherList.containsAll(publisherPOJOList));
-    }
-
-    @Test
-    public void testImportAuthorsDuplicate() {
-        assertEquals(importData.importAuthors(pathDuplicateAuthors),
-                Collections.singletonList(authorList.get(2)));
-    }
-
-    @Test
-    public void testImportBooksDuplicate() {
-        assertEquals(importData.importBooks(pathDuplicateBooks),
-                Collections.singletonList(bookList.get(1)));
+        ReflectionTestUtils.setField(importer, "pathToBooks", pathInvalidBooks);
+        when(validator.validateAndDistinct(anyList())).thenAnswer(returnsFirstArg());
+        List<BookPOJO> books = importer.importBooks();
+        assertSame(books.get(0).getPublishDate(), null);
+        assertSame(books.get(1).getCategory(), null);
+        assertEquals(books.get(2).getPrice(), new BigDecimal("-1.76"));
+        assertNotEquals(books.get(3).getAuthors(), bookList.get(3).getAuthors());
+        assertSame(books.get(3).getPrice(), null);
     }
 }
 

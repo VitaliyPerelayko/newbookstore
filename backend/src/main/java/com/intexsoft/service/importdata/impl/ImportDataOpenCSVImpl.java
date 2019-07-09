@@ -10,6 +10,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -23,31 +24,62 @@ import java.util.List;
 public class ImportDataOpenCSVImpl implements ImportData {
 
     private final static Logger LOGGER = LogManager.getLogger(ImportDataOpenCSVImpl.class);
-    private final POJOValidator validator = POJOValidatorImpl.getValidator();
+    private final POJOValidator validator;
+    @Value("${path.to.publishers.csv}")
+    private String pathToPublishers;
+    @Value("${path.to.authors.csv}")
+    private String pathToAuthors;
+    @Value("${path.to.books.csv}")
+    private String pathToBooks;
 
+    public ImportDataOpenCSVImpl(POJOValidator validator) {
+        this.validator = validator;
+    }
+
+    /**
+     * import data from csv file
+     * Entity will not imported if it's invalid
+     * (remark: if there are duplicates of authors then will imported only the last of them)
+     *
+     * @return List of AuthorsPOJO
+     */
     @Override
-    public List<AuthorPOJO> importAuthors(String path) {
-        List<AuthorPOJO> authorList = parseData(path, AuthorPOJO.class);
+    public List<AuthorPOJO> importAuthors() {
+        List<AuthorPOJO> authorList = parseData(pathToAuthors, AuthorPOJO.class);
 
-        List<AuthorPOJO> authorPOJOList = new ArrayList<>(validator.distinct(authorList));
+        List<AuthorPOJO> authorPOJOList = validator.validateAndDistinct(authorList);
         LOGGER.info("There ware imported {} authors", authorPOJOList.size());
         return authorPOJOList;
     }
 
+    /**
+     * import data from csv file
+     * Entity will not imported if it's invalid
+     * (remark: if there are duplicates of books then will imported only the last of them)
+     *
+     * @return List of BooksPOJO
+     */
     @Override
-    public List<BookPOJO> importBooks(String path) {
-        List<BookPOJO> bookList = parseData(path, BookPOJO.class);
+    public List<BookPOJO> importBooks() {
+        List<BookPOJO> bookList = parseData(pathToBooks, BookPOJO.class);
 
-        List<BookPOJO> bookPOJOList = new ArrayList<>(validator.distinct(bookList));
+        List<BookPOJO> bookPOJOList = validator.validateAndDistinct(bookList);
         LOGGER.info("There ware imported {} books", bookPOJOList.size());
         return bookPOJOList;
     }
 
+    /**
+     * import data from csv file
+     * Entity will not imported if it's invalid
+     * (remark: if there are duplicates of publishers then will imported only the last of them)
+     *
+     * @return List of PublishersPOJO
+     */
     @Override
-    public List<PublisherPOJO> importPublishers(String path) {
-        List<PublisherPOJO> publisherList = parseData(path, PublisherPOJO.class);
+    public List<PublisherPOJO> importPublishers() {
+        List<PublisherPOJO> publisherList = parseData(pathToPublishers, PublisherPOJO.class);
 
-        List<PublisherPOJO> publisherPOJOList = new ArrayList<>(validator.distinct(publisherList));
+        List<PublisherPOJO> publisherPOJOList = validator.validateAndDistinct(publisherList);
         LOGGER.info("There ware imported {} books", publisherPOJOList.size());
         return publisherPOJOList;
     }

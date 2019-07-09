@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface POJOValidator {
 
-    <T extends ObjectsForBindings> Collection<T> distinct(List<T> list);
+    <T extends ObjectsForBindings> List<T> validateAndDistinct(List<T> list);
 
     <T extends ObjectsForBindings> boolean valid(T object);
 }

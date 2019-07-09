@@ -1,9 +1,13 @@
 package com.intexsoft.web.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+
+import javax.validation.constraints.*;
+import java.time.LocalDate;
 
 public class AuthorDTO {
 
@@ -17,8 +21,12 @@ public class AuthorDTO {
     @Size(max = 200, message = "Amount of characters in author's biography must be less 200")
     private String bio;
 
-    @NotBlank(message = "BirthDate of author must be not blank")
-    private String birthDate;
+    @NotNull(message = "BirthDate of author must be not null")
+    @Past(message = "Author can not be born in the future")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate birthDate;
 
     public Long getId() {
         return id;
@@ -44,11 +52,11 @@ public class AuthorDTO {
         this.bio = bio;
     }
 
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 }
