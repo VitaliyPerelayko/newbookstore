@@ -29,11 +29,4 @@ public class WebConfiguration implements WebMvcConfigurer {
     public Mapper mapper() {
         return new DozerBeanMapper();
     }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry resourceHandlerRegistry){
-        resourceHandlerRegistry.
-                addResourceHandler("/").
-                addResourceLocations("resources");
-    }
 }

@@ -1,6 +1,7 @@
 package com.intexsoft.configuration;
 
-import com.intexsoft.security.MyFilter;
+import com.intexsoft.security.TokenFilter;
+import com.intexsoft.service.security.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,16 +18,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+    private final TokenService tokenService;
 
-    public SecurityConfiguration(UserDetailsService userDetailsService) {
+    public SecurityConfiguration(UserDetailsService userDetailsService, TokenService tokenService) {
         this.userDetailsService = userDetailsService;
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.userDetailsService(userDetailsService);
+        this.tokenService = tokenService;
     }
 
     @Bean
@@ -37,21 +34,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        http.httpBasic()
-                .and()
+        http.csrf().disable().cors().and()
                 .authorizeRequests()
                 .antMatchers("/login/**").permitAll()
-                .mvcMatchers(HttpMethod.GET,"/books/**").hasRole("USER")
-                .and()
-                .csrf().disable().cors().and()
-                .formLogin();
-//                .and()
-//                .formLogin()
-////                .successHandler(mySuccessHandler)
-////                .failureHandler(myFailureHandler)
-//                .and()
-//                .logout();
-//        http.addFilterBefore(new MyFilter(userDetailsService),UsernamePasswordAuthenticationFilter.class)
+                .antMatchers(HttpMethod.GET,"/books/**").hasRole("USER");
+        http.addFilterBefore(
+                new TokenFilter(userDetailsService, tokenService),UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
