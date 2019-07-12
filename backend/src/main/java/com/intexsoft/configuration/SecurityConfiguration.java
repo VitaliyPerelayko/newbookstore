@@ -5,7 +5,6 @@ import com.intexsoft.service.security.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -37,9 +36,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable().cors().and()
                 .authorizeRequests()
                 .antMatchers("/login/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/books/**").hasRole("USER");
+                .antMatchers(HttpMethod.GET,"/books/**", "/authors/**", "/publishers/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest().hasRole("ADMIN");
         http.addFilterBefore(
-                new TokenFilter(userDetailsService, tokenService),UsernamePasswordAuthenticationFilter.class);
+                new TokenFilter(userDetailsService, tokenService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

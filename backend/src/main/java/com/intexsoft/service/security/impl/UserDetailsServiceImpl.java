@@ -1,5 +1,6 @@
 package com.intexsoft.service.security.impl;
 
+import com.intexsoft.dao.model.Role;
 import com.intexsoft.dao.model.User;
 import com.intexsoft.security.model.UserDetailsImpl;
 import com.intexsoft.service.entityservice.UserService;
@@ -10,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,14 +28,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
 
-        User user = userService.findByUsername(username).orElseThrow(() ->
+        User user = userService.getUserWithRoles(username).orElseThrow(() ->
                 new UsernameNotFoundException("No user found with username: " + username));
+
         return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(),
-                //TODO: if i add roles in database rewrite this part
-                getAuthorities(Collections.singletonList("ROLE_ADMIN")));
+                getAuthorities(user.getRoles()));
     }
 
-    private List<GrantedAuthority> getAuthorities(List<String> roles) {
-        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    private List<GrantedAuthority> getAuthorities(Set<Role> roles) {
+        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 }

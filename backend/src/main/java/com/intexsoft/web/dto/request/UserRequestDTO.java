@@ -3,6 +3,7 @@ package com.intexsoft.web.dto.request;
 import com.intexsoft.validation.annotations.ValidEmail;
 
 import javax.validation.constraints.*;
+import java.util.List;
 
 public class UserRequestDTO {
 
@@ -30,6 +31,11 @@ public class UserRequestDTO {
     @NotBlank(message = "user's password must be not blank")
     @Size(max = 100, message = "Amount of characters in user's e_mail must be less than 100")
     private String password;
+
+    @NotEmpty
+    private List<
+            @NotBlank
+            String> roles;
 
     public Long getId() {
         return id;
@@ -86,4 +92,13 @@ public class UserRequestDTO {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 }
+

@@ -1,13 +1,16 @@
 package com.intexsoft.service.entityservice.impl;
 
+import com.intexsoft.dao.model.Role;
 import com.intexsoft.dao.model.User;
 import com.intexsoft.dao.repository.UserRepository;
 import com.intexsoft.service.entityservice.UserService;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -60,6 +63,17 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * get all user's roles by his id
+     *
+     * @param username username of User
+     * @return Set of Role
+     */
+    @Override
+    public Optional<User> getUserWithRoles(String username) {
+        return Optional.ofNullable(userRepository.getUserWithRoles(username));
+    }
+
+    /**
      * Save new entity User.
      *
      * @param user user entity
@@ -68,7 +82,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User save(User user) {
-        validate(user.getId()!=null, "Error. The saved user must hasn't id");
+        validate(user.getId() != null, "Error. The saved user must hasn't id");
         return userRepository.save(user);
     }
 
@@ -80,8 +94,8 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public User update(User user){
-        validate(user.getId()==null, "Error. The saved user must has id");
+    public User update(User user) {
+        validate(user.getId() == null, "Error. The saved user must has id");
         return userRepository.save(user);
     }
 
@@ -93,7 +107,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void DeleteById(Long id){
+    public void DeleteById(Long id) {
         userRepository.deleteById(id);
     }
 
