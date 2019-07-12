@@ -2,10 +2,12 @@ package com.intexsoft.web.controllers;
 
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.service.entityservice.AuthorService;
+import com.intexsoft.service.entityservice.impl.AuthorServiceImpl;
 import com.intexsoft.web.dto.AuthorDTO;
 import com.intexsoft.web.dto.mapping.AuthorDTOMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

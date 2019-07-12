@@ -36,8 +36,10 @@
         <jackson.core>2.9.8</jackson.core>
 
         <!-- Test -->
+        <junit-runner>1.5.0</junit-runner>
         <junit-jupiter-engine>5.4.2</junit-jupiter-engine>
         <mockito>2.28.2</mockito>
+        <rest-assure>4.0.0</rest-assure>
 
         <!-- Plugins -->
         <flyway>5.2.4</flyway>
@@ -60,6 +62,21 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+            <version>${org.spring.core}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${org.spring.core}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${org.spring.core}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
             <version>${org.spring.core}</version>
         </dependency>
 
