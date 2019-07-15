@@ -11,14 +11,13 @@ import java.time.LocalDate;
 
 public class AuthorDTO {
 
-    @PositiveOrZero(message = "Id of author must be positive or zero")
     private Long id;
 
     @NotBlank(message = "Name of author must be not blank")
-    @Size(max = 50, message = "Amount of characters in author's name must be less than 50")
+    @Size(max = 50, message = "Number of characters in author's name must be less than 50")
     private String name;
 
-    @Size(max = 200, message = "Amount of characters in author's biography must be less 200")
+    @Size(max = 200, message = "Number of characters in author's biography must be less 200")
     private String bio;
 
     @NotNull(message = "BirthDate of author must be not null")

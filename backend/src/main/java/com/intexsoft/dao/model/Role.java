@@ -1,6 +1,7 @@
 package com.intexsoft.dao.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
@@ -11,6 +12,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "role's name must be not blank")
     private String name;
 
     @ManyToMany(mappedBy = "roles")

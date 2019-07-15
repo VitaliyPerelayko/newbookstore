@@ -11,18 +11,17 @@ import java.util.List;
 
 public class BookRequestDTO {
 
-    @PositiveOrZero(message = "Id of book must be positive or zero")
     private Long id;
 
     @NotBlank(message = "Name of book must be not blank")
-    @Size(max = 50, message = "Amount of characters in book's title must be less than 50")
+    @Size(max = 50, message = "Number of characters in book's title must be less than 50")
     private String name;
 
     @NotBlank(message = "Code of book must be not blank")
-    @Size(max = 20, message = "Amount of characters in book's code must be less than 20")
+    @Size(max = 20, message = "Number of characters in book's code must be less than 20")
     private String code;
 
-    @Size(max = 200, message = "Amount of characters in book's description must be less than 200")
+    @Size(max = 200, message = "Number of characters in book's description must be less than 200")
     private String description;
 
     @NotEmpty(message = "List of authors must be not empty")
@@ -44,6 +43,9 @@ public class BookRequestDTO {
 
     @NotBlank(message = "Category of book must be not blank")
     private String category;
+
+    @PositiveOrZero(message = "Number of books must be positive")
+    private Short number;
 
     public Long getId() {
         return id;
@@ -115,5 +117,13 @@ public class BookRequestDTO {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Short getNumber() {
+        return number;
+    }
+
+    public void setNumber(Short number) {
+        this.number = number;
     }
 }

@@ -67,12 +67,12 @@ CREATE TABLE IF NOT EXISTS `books`.`book_has_author` (
                                                         CONSTRAINT `fk_book_id`
                                                             FOREIGN KEY (`book_id`)
                                                                 REFERENCES `books`.`book` (`id`)
-                                                                ON DELETE NO ACTION
+                                                                ON DELETE CASCADE
                                                                 ON UPDATE NO ACTION,
                                                         CONSTRAINT `fk_author_id`
                                                             FOREIGN KEY (`author_id`)
                                                                 REFERENCES `books`.`author` (`id`)
-                                                                ON DELETE NO ACTION
+                                                                ON DELETE CASCADE
                                                                 ON UPDATE NO ACTION)
     ENGINE = InnoDB;
 

@@ -42,6 +42,7 @@ public class BookDTOMapper {
                 map(author -> mapper.map(author, AuthorResponseInBookDTO.class)).collect(Collectors.toList()));
         bookResponseDTO.setPublisher(mapper.map(book.getPublisher(), PublisherDTO.class));
         bookResponseDTO.setPublishDate(book.getPublishDate());
+        bookResponseDTO.setNumber(book.getNumber());
         return bookResponseDTO;
     }
 
@@ -53,6 +54,7 @@ public class BookDTOMapper {
         book.setCategory(Category.valueOf(bookRequestDTO.getCategory()));
         book.setDescription(bookRequestDTO.getDescription());
         book.setPrice(bookRequestDTO.getPrice());
+        book.setNumber(bookRequestDTO.getNumber());
         book.setAuthors(bookRequestDTO.getAuthors().stream().
                 map(authorName -> authorService.findByName(authorName).
                         orElseThrow(() ->

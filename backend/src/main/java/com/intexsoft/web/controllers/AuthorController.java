@@ -2,12 +2,8 @@ package com.intexsoft.web.controllers;
 
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.service.entityservice.AuthorService;
-import com.intexsoft.service.entityservice.impl.AuthorServiceImpl;
 import com.intexsoft.web.dto.AuthorDTO;
 import com.intexsoft.web.dto.mapping.AuthorDTOMapper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +19,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/authors")
 public class AuthorController {
 
-    private final static Logger LOGGER = LogManager.getLogger(AuthorController.class);
     private final AuthorService authorService;
     private final AuthorDTOMapper authorDTOMapper;
 
@@ -55,9 +50,7 @@ public class AuthorController {
     @PutMapping("/{id}")
     public ResponseEntity<AuthorDTO> update(@PathVariable Long id, @Valid @RequestBody AuthorDTO authorDTO) {
         if (!id.equals(authorDTO.getId())) {
-            RuntimeException e = new RuntimeException("Id in URL path and id in request body must be the same");
-            LOGGER.error(e);
-            throw e;
+            throw new RuntimeException("Id in URL path and id in request body must be the same");
         }
         AuthorDTO authorResponseDTO = authorDTOMapper.mapAuthorToAuthorDTO(authorService.update(
                 authorDTOMapper.mapAuthorDTOToAuthor(authorDTO)));

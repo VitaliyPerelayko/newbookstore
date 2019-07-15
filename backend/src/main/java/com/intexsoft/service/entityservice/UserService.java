@@ -26,5 +26,5 @@ public interface UserService {
     User update(User user);
 
     @Transactional
-    void DeleteById(Long id);
+    void deleteById(Long id);
 }

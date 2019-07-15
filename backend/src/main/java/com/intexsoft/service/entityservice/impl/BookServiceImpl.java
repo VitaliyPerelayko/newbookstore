@@ -3,11 +3,10 @@ package com.intexsoft.service.entityservice.impl;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.repository.BookRepository;
 import com.intexsoft.service.entityservice.BookService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +16,6 @@ import java.util.Optional;
 @Service
 public class BookServiceImpl implements BookService {
 
-    private final static Logger LOGGER = LogManager.getLogger(BookServiceImpl.class);
     private final BookRepository bookRepository;
 
     public BookServiceImpl(BookRepository bookRepository) {
@@ -75,7 +73,7 @@ public class BookServiceImpl implements BookService {
      */
     @Transactional
     @Override
-    public Book save(Book book) {
+    public Book save(@Valid Book book) {
         validate(book.getId() != null,
                 "error.book.haveId");
         validate(!bookRepository.existsByCode(book.getCode()), "error.book.code.notUnique");
@@ -91,7 +89,7 @@ public class BookServiceImpl implements BookService {
      */
     @Transactional
     @Override
-    public List<Book> saveAll(List<Book> books) {
+    public List<Book> saveAll(List<@Valid Book> books) {
         books.forEach(book -> {
             validate(book.getId() != null, "error.book.haveId");
             validate(bookRepository.existsByCode(book.getCode()), "error.book.code.notUnique");
@@ -109,7 +107,7 @@ public class BookServiceImpl implements BookService {
      */
     @Transactional
     @Override
-    public List<Book> saveBatch(List<Book> books) {
+    public List<Book> saveBatch(List<@Valid Book> books) {
         books.forEach(book -> {
             Optional<Book> updatedBook = findByCode(book.getCode());
             updatedBook.ifPresent(value -> book.setCode(value.getCode()));
@@ -125,7 +123,7 @@ public class BookServiceImpl implements BookService {
      */
     @Transactional
     @Override
-    public Book update(Book book) {
+    public Book update(@Valid Book book) {
         Long id = book.getId();
         validate(id == null,
                 "error.book.haveNoId");
@@ -136,13 +134,27 @@ public class BookServiceImpl implements BookService {
     }
 
     /**
+     * Insert new number of books to the book with the given id
+     *
+     * @param id     id of book
+     * @param number new number of book
+     */
+    @Transactional
+    @Override
+    public void setNumberOfBooks(Long id, Short number) {
+        validate(number < 0, "Error. Number of books must be positive");
+        isExist(id);
+        bookRepository.insertNumberOfBooks(id, number);
+    }
+
+    /**
      * Deletes a given entity.
      *
      * @param book book entity
      */
     @Override
     @Transactional
-    public void delete(Book book) {
+    public void delete(@Valid Book book) {
         Long id = book.getId();
         validate(id == null, "error.book.haveId");
         isExist(id);

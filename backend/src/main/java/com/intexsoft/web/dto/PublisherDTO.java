@@ -9,7 +9,6 @@ import javax.validation.constraints.Size;
  */
 public class PublisherDTO {
 
-    @PositiveOrZero(message = "Id of publisher must be positive or zero")
     private Long id;
 
     @NotBlank(message = "Name of publisher must be not blank")

@@ -1,6 +1,10 @@
 package com.intexsoft.dao.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -12,12 +16,20 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Name of author must be not blank")
+    @Size(max = 50, message = "Number of characters in author's name must be less than 50")
     private String name;
 
+    @Size(max = 200, message = "Number of characters in author's biography must be less 200")
     private String bio;
 
+    @NotNull(message = "BirthDate of author must be not null")
+    @Past(message = "Author can not be born in the future")
     private LocalDate birthDate;
+
+    @ManyToMany(cascade = CascadeType.REMOVE, mappedBy = "authors")
+    private Set<Book> books;
 
     public Author(String name, String bio, LocalDate birthDate) {
         this.name = name;
@@ -27,9 +39,6 @@ public class Author {
 
     public Author() {
     }
-
-    @ManyToMany(mappedBy = "authors")
-    private Set<Book> books;
 
     public Long getId() {
         return id;

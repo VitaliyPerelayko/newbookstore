@@ -3,11 +3,10 @@ package com.intexsoft.service.entityservice.impl;
 import com.intexsoft.dao.model.Publisher;
 import com.intexsoft.dao.repository.PublisherRepository;
 import com.intexsoft.service.entityservice.PublisherService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +16,6 @@ import java.util.Optional;
 @Service
 public class PublisherServiceImpl implements PublisherService {
 
-    private final static Logger LOGGER = LogManager.getLogger(AuthorServiceImpl.class);
     private final PublisherRepository publisherRepository;
 
     public PublisherServiceImpl(PublisherRepository publisherRepository) {
@@ -77,7 +75,7 @@ public class PublisherServiceImpl implements PublisherService {
      */
     @Transactional
     @Override
-    public Publisher save(Publisher publisher) {
+    public Publisher save(@Valid Publisher publisher) {
         validate(publisher.getId() != null,
                 "error.publisher.haveId");
         validate(publisherRepository.existsByName(publisher.getName()), "error.publisher.name.notUnique");
@@ -93,7 +91,7 @@ public class PublisherServiceImpl implements PublisherService {
      */
     @Transactional
     @Override
-    public List<Publisher> saveAll(List<Publisher> publishers) {
+    public List<Publisher> saveAll(List<@Valid Publisher> publishers) {
         publishers.forEach(publisher -> {
             validate(publisher.getId() != null, "error.publisher.haveId");
             validate(publisherRepository.existsByName(publisher.getName()), "error.publisher.name.notUnique");
@@ -111,7 +109,7 @@ public class PublisherServiceImpl implements PublisherService {
      */
     @Transactional
     @Override
-    public List<Publisher> saveBatch(List<Publisher> publishers) {
+    public List<Publisher> saveBatch(List<@Valid Publisher> publishers) {
         publishers.forEach(publisher -> {
             Optional<Publisher> duplicatePublisher = findByName(publisher.getName());
             duplicatePublisher.ifPresent(value -> publisher.setId(value.getId()));
@@ -127,7 +125,7 @@ public class PublisherServiceImpl implements PublisherService {
      */
     @Transactional
     @Override
-    public Publisher update(Publisher publisher) {
+    public Publisher update(@Valid Publisher publisher) {
         Long id = publisher.getId();
         validate(id == null,
                 "error.publisher.haveNoId");
@@ -144,7 +142,7 @@ public class PublisherServiceImpl implements PublisherService {
      */
     @Override
     @Transactional
-    public void delete(Publisher publisher) {
+    public void delete(@Valid Publisher publisher) {
         Long id = publisher.getId();
         validate(id == null, "error.publisher.haveId");
         isExist(id);
@@ -166,7 +164,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     private void validate(boolean expression, String errorMessage) {
         if (expression) {
-             throw new RuntimeException(errorMessage);
+            throw new RuntimeException(errorMessage);
         }
     }
 

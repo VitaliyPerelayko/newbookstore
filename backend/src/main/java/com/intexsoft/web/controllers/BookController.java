@@ -7,8 +7,6 @@ import com.intexsoft.web.dto.mapping.BookDTOMapper;
 import com.intexsoft.web.dto.request.BookRequestDTO;
 import com.intexsoft.web.dto.response.BookResponseDTO;
 import com.intexsoft.web.dto.response.BookResponseShortVersionDTO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +23,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/books")
 public class BookController {
 
-    private final static Logger LOGGER = LogManager.getLogger(BookController.class);
     private final BookService bookService;
     private final BookDTOMapper bookDTOMapper;
     private final Mapper mapper;
@@ -85,13 +82,20 @@ public class BookController {
     @PutMapping("/{id}")
     public ResponseEntity<BookResponseDTO> update(@PathVariable Long id, @Valid @RequestBody BookRequestDTO bookRequestDTO) {
         if (!id.equals(bookRequestDTO.getId())) {
-            RuntimeException e = new RuntimeException("Id in URL path and id in request body must be the same");
-            LOGGER.error(e);
-            throw e;
+            throw new IllegalStateException("Id in URL path and id in request body must be the same");
         }
         BookResponseDTO bookResponseDTO = bookDTOMapper.mapBookToBookResponseDTO(bookService.
                 update(bookDTOMapper.mapBookRequestDTOToBook(bookRequestDTO)));
         return ResponseEntity.ok(bookResponseDTO);
+    }
+
+    @PutMapping("/number/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void setNumberOfBooks(@PathVariable Long id, @RequestParam Short number) {
+        if (number < 0) {
+            throw new IllegalArgumentException("Number of books must be positive");
+        }
+        bookService.setNumberOfBooks(id, number);
     }
 
     /**

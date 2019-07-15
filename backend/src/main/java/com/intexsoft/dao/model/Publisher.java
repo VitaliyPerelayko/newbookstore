@@ -2,6 +2,8 @@ package com.intexsoft.dao.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -12,6 +14,8 @@ public class Publisher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Name of publisher must be not blank")
+    @Size(max = 50, message = "Number of characters in publisher's name must be less than 50")
     @Column(unique = true)
     private String name;
 

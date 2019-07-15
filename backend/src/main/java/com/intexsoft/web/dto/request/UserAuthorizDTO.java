@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 public class UserAuthorizDTO {
 
     @NotBlank(message = "Username must be not blank")
-    @Size(max = 50, message = "Amount of characters for user's username must be less then 50")
+    @Size(max = 50, message = "Number of characters for user's username must be less then 50")
     private String username;
 
     @NotBlank(message = "Password must be not blank")

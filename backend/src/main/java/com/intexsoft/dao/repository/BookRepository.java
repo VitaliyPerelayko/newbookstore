@@ -43,4 +43,13 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      * @return book with the given code
      */
     Book findBookByCode(String code);
+
+    /**
+     * Insert new number of books to the book with the given id
+     *
+     * @param id id of book
+     * @param number new number of book
+     */
+    @Query("UPDATE Book book SET book.number=:number WHERE book.id = :id")
+    void insertNumberOfBooks(@Param("id") Long id, @Param("number") Short number);
 }

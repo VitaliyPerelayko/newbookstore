@@ -7,34 +7,32 @@ import java.util.List;
 
 public class UserRequestDTO {
 
-    @PositiveOrZero(message = "User's id must be positive number")
-    @Digits(integer = 6, fraction = 0, message = "User's id must be integer number")
     private Long id;
 
-    @Size(max = 50, message = "Amount of characters in user's name must be less than 50")
+    @Size(max = 50, message = "Number of characters in user's name must be less than 50")
     private String name;
 
-    @Size(max = 50, message = "Amount of characters in user's surname must be less than 50")
+    @Size(max = 50, message = "Number of characters in user's surname must be less than 50")
     private String surname;
 
-    @Size(max = 15, message = "Amount of characters in user's phone must be less than 15")
+    @Size(max = 15, message = "Number of characters in user's phone must be less than 15")
     private String phone;
 
-    @Size(max = 50, message = "Amount of characters in user's e_mail must be less than 50")
+    @Size(max = 50, message = "Number of characters in user's e_mail must be less than 50")
     @ValidEmail(message = "User's e_mail invalid. The string has to be a well-formed email address")
     private String e_mail;
 
     @NotBlank(message = "user's username must be not blank")
-    @Size(max = 50, message = "Amount of characters in user's username must be less than 50")
+    @Size(max = 50, message = "Number of characters in user's username must be less than 50")
     private String username;
 
     @NotBlank(message = "user's password must be not blank")
-    @Size(max = 100, message = "Amount of characters in user's e_mail must be less than 100")
+    @Size(max = 100, message = "Number of characters in user's e_mail must be less than 100")
     private String password;
 
-    @NotEmpty
+    @NotEmpty(message = "user's roles must be not empty")
     private List<
-            @NotBlank
+            @NotBlank(message = "each user's role must be not blank")
             String> roles;
 
     public Long getId() {

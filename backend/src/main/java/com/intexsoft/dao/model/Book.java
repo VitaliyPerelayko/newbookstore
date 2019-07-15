@@ -1,6 +1,7 @@
 package com.intexsoft.dao.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
@@ -13,31 +14,54 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    @NotBlank(message = "Code of book must be not blank")
+    @Size(max = 20, message = "Number of characters in book's code must be less than 20")
     private String code;
 
+    @Column(nullable = false)
+    @NotBlank(message = "Name of book must be not blank")
+    @Size(max = 50, message = "Number of characters in book's title must be less than 50")
     private String name;
 
+    @Size(max = 200, message = "Number of characters in book's description must be less than 200")
     private String description;
 
-    @ManyToMany()
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name = "book_has_author",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private Set<Author> authors;
+    @NotEmpty(message = "List of authors must be not empty")
+    private Set<
+            @NotNull(message = "Each author name must be not null")
+            Author> authors;
 
+    @Column(nullable = false)
+    @NotNull(message = "Publish date of book must be not null")
     private LocalDate publishDate;
 
     @ManyToOne
-    @JoinColumn(name = "publisher", referencedColumnName = "id")
+    @JoinColumn(name = "publisher", referencedColumnName = "id", nullable = false)
+    @NotNull(message = "Publisher of book must be mot null")
     private Publisher publisher;
 
+    @Column(nullable = false)
+    @NotNull(message = "Price of book must be not null")
+    @Positive(message = "Price of book must be positive")
     private BigDecimal price;
 
-    @Column(columnDefinition = "VARCHAR(15)")
+    @Column(columnDefinition = "VARCHAR(15)", nullable = false)
+    @NotNull(message = "Category of book must be not null")
     private Category category;
 
+    @PositiveOrZero(message = "Number of books must be positive")
+    private Short number;
+
+    @OneToMany(mappedBy = "book")
+    private Set<Review> reviews;
+
     public Book(String code, String name, String description, Set<Author> authors, LocalDate publishDate,
-                Publisher publisher, BigDecimal price, Category category) {
+                Publisher publisher, BigDecimal price, Category category, Short number) {
         this.code = code;
         this.name = name;
         this.description = description;
@@ -46,6 +70,7 @@ public class Book {
         this.publisher = publisher;
         this.price = price;
         this.category = category;
+        this.number = number;
     }
 
     public Book() {
@@ -121,5 +146,17 @@ public class Book {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Short getNumber() {
+        return number;
+    }
+
+    public void setNumber(Short number) {
+        this.number = number;
+    }
+
+    public Set<Review> getReviews() {
+        return reviews;
     }
 }

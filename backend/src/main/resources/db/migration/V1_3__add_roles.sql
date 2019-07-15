@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS user_has_role
     CONSTRAINT `fk_user_id`
         FOREIGN KEY (`user_id`)
             REFERENCES `users` (`id`)
-            ON DELETE NO ACTION
+            ON DELETE CASCADE
             ON UPDATE NO ACTION,
     CONSTRAINT `fk_role_id`
         FOREIGN KEY (`role_id`)

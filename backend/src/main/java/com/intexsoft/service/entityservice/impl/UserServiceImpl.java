@@ -1,16 +1,14 @@
 package com.intexsoft.service.entityservice.impl;
 
-import com.intexsoft.dao.model.Role;
 import com.intexsoft.dao.model.User;
 import com.intexsoft.dao.repository.UserRepository;
 import com.intexsoft.service.entityservice.UserService;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -81,7 +79,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public User save(User user) {
+    public User save(@Valid User user) {
         validate(user.getId() != null, "Error. The saved user must hasn't id");
         return userRepository.save(user);
     }
@@ -94,7 +92,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public User update(User user) {
+    public User update(@Valid User user) {
         validate(user.getId() == null, "Error. The saved user must has id");
         return userRepository.save(user);
     }
@@ -107,7 +105,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void DeleteById(Long id) {
+    public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
 

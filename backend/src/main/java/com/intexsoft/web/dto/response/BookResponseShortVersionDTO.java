@@ -9,6 +9,8 @@ public class BookResponseShortVersionDTO {
 
     private String category;
 
+    private Short number;
+
     public Long getId() {
         return id;
     }
@@ -39,5 +41,13 @@ public class BookResponseShortVersionDTO {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Short getNumber() {
+        return number;
+    }
+
+    public void setNumber(Short number) {
+        this.number = number;
     }
 }

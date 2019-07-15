@@ -31,6 +31,9 @@ public interface BookService {
     Book update(Book book);
 
     @Transactional
+    void setNumberOfBooks(Long id, Short number);
+
+    @Transactional
     void delete(Book book);
 
     @Transactional

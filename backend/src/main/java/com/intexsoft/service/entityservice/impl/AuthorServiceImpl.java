@@ -3,11 +3,10 @@ package com.intexsoft.service.entityservice.impl;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.repository.AuthorRepository;
 import com.intexsoft.service.entityservice.AuthorService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +16,6 @@ import java.util.Optional;
 @Service
 public class AuthorServiceImpl implements AuthorService {
 
-    private final static Logger LOGGER = LogManager.getLogger(AuthorServiceImpl.class);
     private final AuthorRepository authorRepository;
 
     public AuthorServiceImpl(AuthorRepository authorRepository) {
@@ -77,7 +75,7 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Transactional
     @Override
-    public Author save(Author author) {
+    public Author save(@Valid Author author) {
         validate(author.getId() != null,
                 "error.author.haveId");
         validate(authorRepository.existsByName(author.getName()), "error.author.name.notUnique");
@@ -93,7 +91,7 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Transactional
     @Override
-    public List<Author> saveAll(List<Author> authors) {
+    public List<Author> saveAll(List<@Valid Author> authors) {
         authors.forEach(author -> {
             validate(author.getId() != null, "error.author.haveId");
             validate(authorRepository.existsByName(author.getName()), "error.author.name.notUnique");
@@ -111,7 +109,7 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Transactional
     @Override
-    public List<Author> saveBatch(List<Author> authors) {
+    public List<Author> saveBatch(List<@Valid Author> authors) {
         authors.forEach(author -> {
             Optional<Author> updatedAuthor = findByName(author.getName());
             updatedAuthor.ifPresent(value -> author.setId(value.getId()));
@@ -127,7 +125,7 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Transactional
     @Override
-    public Author update(Author author) {
+    public Author update(@Valid Author author) {
         Long id = author.getId();
         validate(id == null,
                 "error.author.haveNoId");
@@ -144,7 +142,7 @@ public class AuthorServiceImpl implements AuthorService {
      */
     @Override
     @Transactional
-    public void delete(Author author) {
+    public void delete(@Valid Author author) {
         Long id = author.getId();
         validate(id == null, "error.author.haveId");
         isExist(id);

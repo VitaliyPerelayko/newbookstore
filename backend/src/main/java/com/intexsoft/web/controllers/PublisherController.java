@@ -3,8 +3,6 @@ package com.intexsoft.web.controllers;
 import com.intexsoft.dao.model.Publisher;
 import com.intexsoft.service.entityservice.PublisherService;
 import com.intexsoft.web.dto.PublisherDTO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +19,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/publishers")
 public class PublisherController {
 
-    private final static Logger LOGGER = LogManager.getLogger(PublisherController.class);
     private final PublisherService publisherService;
     private final Mapper mapper;
 
@@ -54,9 +51,7 @@ public class PublisherController {
     @PutMapping("/{id}")
     public ResponseEntity<PublisherDTO> update(@PathVariable Long id, @Valid @RequestBody PublisherDTO publisherDTO) {
         if (!id.equals(publisherDTO.getId())) {
-            RuntimeException e = new RuntimeException("Id in URL path and id in request body must be the same");
-            LOGGER.error(e);
-            throw e;
+            throw new IllegalStateException("Id in URL path and id in request body must be the same");
         }
         PublisherDTO publisherResponseDTO = mapper.map(publisherService.update(
                 mapper.map(publisherDTO, Publisher.class)
