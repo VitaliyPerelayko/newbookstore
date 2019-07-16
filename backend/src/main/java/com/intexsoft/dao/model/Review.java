@@ -16,7 +16,7 @@ public class Review {
     @NotNull(message = "book's rating must be not null")
     @Min(value = 0, message = "book's rating (in entity review) must be higher then 0")
     @Max(value = 10, message = "book's rating (in entity review) must be lower then 10")
-    private Short rating;
+    private Byte rating;
 
     @Column(length = 300)
     @Size(message = "Number of characters in review's comment must be less than 300")
@@ -36,7 +36,7 @@ public class Review {
     @NotNull(message = "Field book in the review entity must be not null. Review must be associated with some book.")
     private Book book;
 
-    public Review(Short rating, String comment, User user, Book book) {
+    public Review(Byte rating, String comment, User user, Book book) {
         this.rating = rating;
         this.comment = comment;
         this.user = user;
@@ -54,11 +54,11 @@ public class Review {
         this.id = id;
     }
 
-    public Short getRating() {
+    public Byte getRating() {
         return rating;
     }
 
-    public void setRating(Short rating) {
+    public void setRating(Byte rating) {
         this.rating = rating;
     }
 

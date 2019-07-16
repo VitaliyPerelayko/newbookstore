@@ -3,6 +3,8 @@ package com.intexsoft.service.entityservice.impl;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.repository.BookRepository;
 import com.intexsoft.service.entityservice.BookService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final Logger LOGGER = LogManager.getLogger(BookServiceImpl.class);
 
     public BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -26,11 +29,21 @@ public class BookServiceImpl implements BookService {
     /**
      * find all books from database
      *
-     * @return List of books
+     * @return List of books ordered by publishDate
      */
     @Override
     public List<Book> findAllSortByDate() {
         return bookRepository.findAllOrderedByDate();
+    }
+
+    /**
+     * find all books from database
+     *
+     * @return List of books
+     */
+    @Override
+    public List<Book> findAll() {
+        return bookRepository.findAllWithReviews();
     }
 
     /**
@@ -43,6 +56,20 @@ public class BookServiceImpl implements BookService {
     public Book findById(Long id) {
         return bookRepository.findBookById(id).orElseThrow(() ->
                 new RuntimeException("Book with the given id doesn't exist"));
+    }
+
+    /**
+     * find book with the highest rating
+     *
+     * @return book
+     */
+    @Override
+    public Book findByTheHighestRating(){
+        Long id = bookRepository.findIdOfBookWithTheHighestRating();
+        if (id==null){
+            throw new IllegalStateException("There aren't any books with review");
+        }
+        return findById(id);
     }
 
     /**

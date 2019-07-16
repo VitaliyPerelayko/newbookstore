@@ -11,6 +11,8 @@ public class BookResponseShortVersionDTO {
 
     private Short number;
 
+    private Float rating;
+
     public Long getId() {
         return id;
     }
@@ -49,5 +51,13 @@ public class BookResponseShortVersionDTO {
 
     public void setNumber(Short number) {
         this.number = number;
+    }
+
+    public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 }

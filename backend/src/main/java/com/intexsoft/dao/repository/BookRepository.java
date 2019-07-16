@@ -1,6 +1,7 @@
 package com.intexsoft.dao.repository;
 
 import com.intexsoft.dao.model.Book;
+import com.intexsoft.web.dto.response.BookResponseShortVersionDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +20,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      * @param id id of book
      * @return book with the given id
      */
-    @Query("FROM Book book JOIN FETCH book.authors WHERE book.id = :id")
+    @Query("FROM Book book JOIN FETCH book.authors JOIN FETCH book.publisher WHERE book.id = :id")
     Optional<Book> findBookById(@Param("id") Long id);
 
     /**
@@ -27,7 +28,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      *
      * @return all books ordered by publish date
      */
-    @Query("FROM Book book ORDER BY book.publishDate")
+    @Query("FROM Book book JOIN FETCH book.reviews ORDER BY book.publishDate")
     List<Book> findAllOrderedByDate();
 
     /**
@@ -42,14 +43,30 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      * @param code code of book
      * @return book with the given code
      */
-    Book findBookByCode(String code);
+    @Query("FROM Book book JOIN FETCH book.authors JOIN FETCH book.publisher WHERE book.code = :code")
+    Book findBookByCode(@Param("code") String code);
 
     /**
      * Insert new number of books to the book with the given id
      *
-     * @param id id of book
+     * @param id     id of book
      * @param number new number of book
      */
-    @Query("UPDATE Book book SET book.number=:number WHERE book.id = :id")
+    @Query("UPDATE Book book SET book.number = :number WHERE book.id = :id")
     void insertNumberOfBooks(@Param("id") Long id, @Param("number") Short number);
+
+    /**
+     * find all books with it's rating
+     *
+     * @return List of books
+     */
+    @Query("FROM Book book JOIN FETCH book.reviews")
+    List<Book> findAllWithReviews();
+
+    /**
+     * find id of book with the highest rating
+     * @return id
+     */
+    @Query(nativeQuery = true, value = "SELECT id FROM reviews WHERE rating = (SELECT MAX(r.rating) FROM reviews r)")
+    Long findIdOfBookWithTheHighestRating();
 }

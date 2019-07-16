@@ -12,7 +12,7 @@ public class ReviewRequestDTO {
     @NotNull(message = "book's rating must be not null")
     @Min(value = 0, message = "book's rating (in entity review) must be higher then 0")
     @Max(value = 10, message = "book's rating (in entity review) must be lower then 10")
-    private Short rating;
+    private Byte rating;
 
     @Size(message = "Number of characters in review's comment must be less than 300")
     private String comment;
@@ -30,11 +30,11 @@ public class ReviewRequestDTO {
         this.id = id;
     }
 
-    public Short getRating() {
+    public Byte getRating() {
         return rating;
     }
 
-    public void setRating(Short rating) {
+    public void setRating(Byte rating) {
         this.rating = rating;
     }
 

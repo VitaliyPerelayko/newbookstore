@@ -1,8 +1,6 @@
 package com.intexsoft.service.entityservice.impl;
 
-import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Review;
-import com.intexsoft.dao.model.User;
 import com.intexsoft.dao.repository.ReviewRepository;
 import com.intexsoft.service.entityservice.ReviewService;
 import org.springframework.stereotype.Service;
@@ -10,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -23,35 +22,46 @@ public class ReviewServiceImpl implements ReviewService {
     /**
      * find all user's reviews of the given book
      *
-     * @param book book
-     * @param user user
+     * @param bookId id of book
+     * @param userId id of user
      * @return List of Review
      */
     @Override
-    public List<Review> findByBookAndUser(@Valid Book book, @Valid User user) {
-        return reviewRepository.findAllByBookAndUserOrderByTime(book, user);
+    public List<Review> findByBookAndUser(Long bookId, Long userId) {
+        return reviewRepository.findAllByBookAndUserOrderByTime(bookId, userId);
     }
 
     /**
      * find all reviews of the given book
      *
-     * @param book book
+     * @param bookId id of book
      * @return List of Review
      */
     @Override
-    public List<Review> findAllByBook(@Valid Book book) {
-        return reviewRepository.findAllByBookOrderByTime(book);
+    public List<Review> findAllByBook(Long bookId) {
+        return reviewRepository.findAllByBookOrderByTime(bookId);
     }
 
     /**
      * find all user's book reviews
      *
-     * @param user user
+     * @param userId id of user
      * @return List of Review
      */
     @Override
-    public List<Review> findAllByUser(@Valid User user) {
-        return reviewRepository.findAllByUserOrderByTime(user);
+    public List<Review> findAllByUser(Long userId) {
+        return reviewRepository.findAllByUserOrderByTime(userId);
+    }
+
+    /**
+     * find review by the given id
+     *
+     * @param id id of review
+     * @return Review
+     */
+    @Override
+    public Optional<Review> findById(Long id){
+        return Optional.ofNullable(reviewRepository.findOneById(id));
     }
 
     /**
@@ -87,7 +97,7 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     @Transactional
-    public void delete(Long id){
+    public void delete(Long id) {
         reviewRepository.deleteById(id);
     }
 

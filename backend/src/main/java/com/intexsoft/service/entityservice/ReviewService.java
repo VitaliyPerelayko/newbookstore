@@ -1,18 +1,19 @@
 package com.intexsoft.service.entityservice;
 
-import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Review;
-import com.intexsoft.dao.model.User;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewService {
-    List<Review> findByBookAndUser(Book book, User user);
+    List<Review> findByBookAndUser(Long bookId, Long userId);
 
-    List<Review> findAllByBook(Book book);
+    List<Review> findAllByBook(Long bookId);
 
-    List<Review> findAllByUser(User user);
+    List<Review> findAllByUser(Long userId);
+
+    Optional<Review> findById(Long id);
 
     @Transactional
     Review save(Review review);

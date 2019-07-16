@@ -6,7 +6,7 @@ public class ReviewResponseDTO {
 
     private Long id;
 
-    private Short rating;
+    private Byte rating;
 
     private String comment;
 
@@ -30,11 +30,11 @@ public class ReviewResponseDTO {
         this.id = id;
     }
 
-    public Short getRating() {
+    public Byte getRating() {
         return rating;
     }
 
-    public void setRating(Short rating) {
+    public void setRating(Byte rating) {
         this.rating = rating;
     }
 

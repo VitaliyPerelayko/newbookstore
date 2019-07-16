@@ -10,9 +10,13 @@ import java.util.Optional;
  * Service layer for Book entity.
  */
 public interface BookService {
+    List<Book> findAll();
+
     Book findById(Long id);
 
     List<Book> findAllSortByDate();
+
+    Book findByTheHighestRating();
 
     Optional<Book> findByCode(String code);
 

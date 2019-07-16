@@ -3,18 +3,20 @@ package com.intexsoft.web.controllers;
 
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.service.entityservice.BookService;
+import com.intexsoft.web.dto.comparator.CompareByRating;
 import com.intexsoft.web.dto.mapping.BookDTOMapper;
 import com.intexsoft.web.dto.request.BookRequestDTO;
 import com.intexsoft.web.dto.response.BookResponseDTO;
 import com.intexsoft.web.dto.response.BookResponseShortVersionDTO;
-import org.dozer.Mapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Controller for entity Book.
@@ -25,26 +27,63 @@ public class BookController {
 
     private final BookService bookService;
     private final BookDTOMapper bookDTOMapper;
-    private final Mapper mapper;
 
-    public BookController(BookService bookService, BookDTOMapper bookDTOMapper, Mapper mapper) {
+    public BookController(BookService bookService, BookDTOMapper bookDTOMapper) {
         this.bookService = bookService;
         this.bookDTOMapper = bookDTOMapper;
-        this.mapper = mapper;
     }
 
     /**
-     * Gets all books from database.
+     * Gets all books from database sorted by publishDate.
      *
      * @return Response: BookResponseDTO ant http status
      */
     @GetMapping
     public ResponseEntity<List<BookResponseShortVersionDTO>> getAll() {
         List<Book> books = bookService.findAllSortByDate();
-        List<BookResponseShortVersionDTO> bookDTOList = books.stream().map(book ->
-                mapper.map(book, BookResponseShortVersionDTO.class))
-                .collect(Collectors.toList());
+        List<BookResponseShortVersionDTO> bookDTOList = books.stream()
+                .map(bookDTOMapper::mapBookToBookResponseShortVersionDTO).collect(Collectors.toList());
         return ResponseEntity.ok(bookDTOList);
+    }
+
+    /**
+     * Gets all books from database sorted by rating.
+     * rating = average of book's reviews rating
+     *
+     * @return Response: BookResponseDTO ant http status
+     */
+    @GetMapping("/rating")
+    public ResponseEntity<List<BookResponseShortVersionDTO>> getAllOrderedByRating() {
+        List<Book> books = bookService.findAll();
+        Stream<BookResponseShortVersionDTO> bookDTOList = books.stream()
+                .map(bookDTOMapper::mapBookToBookResponseShortVersionDTO);
+        return ResponseEntity.ok(bookDTOList.sorted(new CompareByRating()).collect(Collectors.toList()));
+    }
+
+
+    @GetMapping("/rating/{param}")
+    public ResponseEntity<List<BookResponseShortVersionDTO>> getAllOrderedByRatingHigherThan(
+            @PathVariable final Byte param) {
+        List<Book> books = bookService.findAll();
+        Stream<BookResponseShortVersionDTO> bookDTOList = books.stream()
+                .map(bookDTOMapper::mapBookToBookResponseShortVersionDTO).filter(book -> {
+                    Float rating = book.getRating();
+                    return Objects.nonNull(rating) && rating > param;
+                });
+        return ResponseEntity.ok(bookDTOList.sorted(new CompareByRating()).collect(Collectors.toList()));
+    }
+
+    /**
+     * Gets book with the highest rating
+     *
+     * @return Response: BookResponseDTO ant http status
+     * @throws IllegalStateException if there aren't any books with review in database
+     */
+    @GetMapping("/rating-best")
+    public ResponseEntity<BookResponseDTO> getOneWithTheHighestRating() {
+        BookResponseDTO bookResponseDTO =
+                bookDTOMapper.mapBookToBookResponseDTO(bookService.findByTheHighestRating());
+        return ResponseEntity.ok(bookResponseDTO);
     }
 
     /**
