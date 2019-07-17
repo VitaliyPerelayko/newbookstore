@@ -16,8 +16,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @param userId user
      * @return List of Review
      */
-    @Query(nativeQuery = true,
-            value = "SELECT DISTINCT * FROM reviews rev INNER JOIN book b ON rev.book_id = b.id INNER JOIN users u on rev.user_id = u.id WHERE rev.book_id = :bookId AND rev.user_id = :userId")
+    @Query(nativeQuery = true, value =
+            "SELECT DISTINCT * FROM reviews rev INNER JOIN book b ON rev.book_id = b.id INNER JOIN users u on rev.user_id = u.id WHERE rev.book_id = :bookId AND rev.user_id = :userId")
     List<Review> findAllByBookAndUserOrderByTime(@Param("bookId") Long bookId, @Param("userId") Long userId);
 
     /**
@@ -26,8 +26,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @param userId user
      * @return List of Review
      */
-    @Query(nativeQuery = true,
-            value = "SELECT DISTINCT * FROM reviews rev INNER JOIN book b ON rev.book_id = b.id INNER JOIN users u on rev.user_id = u.id WHERE rev.user_id = :userId")
+    @Query(nativeQuery = true, value =
+            "SELECT DISTINCT * FROM reviews rev INNER JOIN book b ON rev.book_id = b.id INNER JOIN users u on rev.user_id = u.id WHERE rev.user_id = :userId")
     List<Review> findAllByUserOrderByTime(@Param("userId") Long userId);
 
 
@@ -37,8 +37,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @param bookId book
      * @return List of Review
      */
-    @Query(nativeQuery = true,
-            value = "SELECT DISTINCT * FROM reviews rev INNER JOIN book b ON rev.book_id = b.id INNER JOIN users u on rev.user_id = u.id WHERE rev.book_id = :bookId")
+    @Query(nativeQuery = true, value =
+            "SELECT DISTINCT * FROM reviews rev INNER JOIN book b ON rev.book_id = b.id INNER JOIN users u on rev.user_id = u.id WHERE rev.book_id = :bookId")
     List<Review> findAllByBookOrderByTime(@Param("bookId") Long bookId);
 
     /**

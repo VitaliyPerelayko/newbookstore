@@ -64,9 +64,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findAllWithReviews();
 
     /**
-     * find id of book with the highest rating
+     * find id of book with the highest average rating
      * @return id
      */
-    @Query(nativeQuery = true, value = "SELECT id FROM reviews WHERE rating = (SELECT MAX(r.rating) FROM reviews r)")
-    Long findIdOfBookWithTheHighestRating();
+    @Query(nativeQuery = true, value =
+            "SELECT book_id FROM (SELECT book_id, AVG(rating) AS avgr FROM reviews GROUP BY book_id ORDER BY avgr DESC LIMIT 1) as bestbook")
+    Long findBookIdWhereMaxAvgRating();
 }

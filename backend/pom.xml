@@ -40,6 +40,7 @@
         <junit-jupiter-engine>5.4.2</junit-jupiter-engine>
         <mockito>2.28.2</mockito>
         <rest-assure>4.0.0</rest-assure>
+        <h2.driver>1.4.199</h2.driver>
 
         <!-- Plugins -->
         <flyway>5.2.4</flyway>
@@ -210,6 +211,13 @@
             <version>${org.spring.core}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.driver}</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 
