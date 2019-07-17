@@ -43,6 +43,7 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "publisher", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Publisher of book must be mot null")
+    @Convert
     private Publisher publisher;
 
     @Column(nullable = false)
@@ -50,7 +51,8 @@ public class Book {
     @Positive(message = "Price of book must be positive")
     private BigDecimal price;
 
-    @Column(columnDefinition = "VARCHAR(15)", nullable = false)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Category of book must be not null")
     private Category category;
 

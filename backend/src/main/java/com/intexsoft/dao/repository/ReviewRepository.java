@@ -1,6 +1,8 @@
 package com.intexsoft.dao.repository;
 
+import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Review;
+import com.intexsoft.dao.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,34 +14,31 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     /**
      * find all user's reviews of the given book
      *
-     * @param bookId book
-     * @param userId user
+     * @param book book
+     * @param user user
      * @return List of Review
      */
-    @Query(nativeQuery = true, value =
-            "SELECT DISTINCT * FROM reviews rev INNER JOIN book b ON rev.book_id = b.id INNER JOIN users u on rev.user_id = u.id WHERE rev.book_id = :bookId AND rev.user_id = :userId")
-    List<Review> findAllByBookAndUserOrderByTime(@Param("bookId") Long bookId, @Param("userId") Long userId);
+    @Query("FROM Review rev JOIN FETCH rev.book JOIN FETCH rev.user WHERE rev.book = :book AND rev.user = :user ORDER BY rev.time")
+    List<Review> findAllByBookAndUserOrderByTime(@Param("book") Book book, @Param("user") User user);
 
     /**
      * find all user's book reviews
      *
-     * @param userId user
+     * @param user user
      * @return List of Review
      */
-    @Query(nativeQuery = true, value =
-            "SELECT DISTINCT * FROM reviews rev INNER JOIN book b ON rev.book_id = b.id INNER JOIN users u on rev.user_id = u.id WHERE rev.user_id = :userId")
-    List<Review> findAllByUserOrderByTime(@Param("userId") Long userId);
+    @Query("FROM Review rev JOIN FETCH rev.book JOIN FETCH rev.user WHERE rev.user = :user ORDER BY rev.time")
+    List<Review> findAllByUserOrderByTime(@Param("user") User user);
 
 
     /**
      * find all reviews of the given book
      *
-     * @param bookId book
+     * @param book book
      * @return List of Review
      */
-    @Query(nativeQuery = true, value =
-            "SELECT DISTINCT * FROM reviews rev INNER JOIN book b ON rev.book_id = b.id INNER JOIN users u on rev.user_id = u.id WHERE rev.book_id = :bookId")
-    List<Review> findAllByBookOrderByTime(@Param("bookId") Long bookId);
+    @Query("FROM Review rev JOIN FETCH rev.book JOIN FETCH rev.user WHERE rev.book = :book ORDER BY rev.time")
+    List<Review> findAllByBookOrderByTime(@Param("book") Book book);
 
     /**
      * find entity by the given id
@@ -47,6 +46,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
      * @param id id of review
      * @return review
      */
-    @Query("FROM Review review JOIN FETCH ALL PROPERTIES WHERE review.id = :id")
+    @Query("FROM Review review JOIN FETCH review.book JOIN FETCH review.user WHERE review.id = :id")
     Review findOneById(@Param("id") Long id);
 }

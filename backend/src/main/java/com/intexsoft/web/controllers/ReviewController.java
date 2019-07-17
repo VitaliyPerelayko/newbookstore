@@ -36,14 +36,14 @@ public class ReviewController {
 
     @GetMapping("/book")
     public ResponseEntity<List<ReviewResponseDTO>> getAllByUser(@RequestParam Long id) {
-        List<Review> reviews = reviewService.findAllByUser(id);
+        List<Review> reviews = reviewService.findAllByBook(id);
         return ResponseEntity.ok(reviews.stream()
                 .map(reviewDTOMapper::mapReviewToReviewResponseDTO).collect(Collectors.toList()));
     }
 
     @GetMapping("/user")
     public ResponseEntity<List<ReviewResponseDTO>> getAllByBook(@RequestParam Long id) {
-        List<Review> reviews = reviewService.findAllByBook(id);
+        List<Review> reviews = reviewService.findAllByUser(id);
         return ResponseEntity.ok(reviews.stream()
                 .map(reviewDTOMapper::mapReviewToReviewResponseDTO).collect(Collectors.toList()));
     }
@@ -66,7 +66,7 @@ public class ReviewController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')  or #id == authentication.principal.id")
-    public ResponseEntity<ReviewResponseDTO> save(@PathVariable Long id,
+    public ResponseEntity<ReviewResponseDTO> update(@PathVariable Long id,
                                                   @Valid @RequestBody ReviewRequestDTO requestDTO) {
         if (!id.equals(requestDTO.getId())) {
             throw new IllegalStateException("Id in URL path and id in request body must be the same");

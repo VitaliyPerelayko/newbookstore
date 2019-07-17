@@ -3,6 +3,7 @@ package com.intexsoft.web.controllers;
 import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Publisher;
+import com.intexsoft.importdata.pojo.mapping.PublisherImportMapper;
 import com.intexsoft.service.entityservice.AuthorService;
 import com.intexsoft.service.entityservice.BookService;
 import com.intexsoft.service.entityservice.PublisherService;
@@ -39,11 +40,13 @@ public class UpdateController {
     private final AuthorDTOMapper authorDTOMapper;
     private final BookImportMapper bookImportMapper;
     private final AuthorImportMapper authorImportMapper;
+    private final PublisherImportMapper publisherImportMapper;
 
     public UpdateController(@Qualifier("importDataJAXBImpl") ImportData importData, Mapper mapper,
                             PublisherService publisherService, AuthorService authorService, BookService bookService,
                             BookDTOMapper bookDTOMapper, AuthorDTOMapper authorDTOMapper,
-                            BookImportMapper bookImportMapper, AuthorImportMapper authorImportMapper) {
+                            BookImportMapper bookImportMapper, AuthorImportMapper authorImportMapper,
+                            PublisherImportMapper publisherImportMapper) {
         this.importData = importData;
         this.mapper = mapper;
         this.publisherService = publisherService;
@@ -53,6 +56,7 @@ public class UpdateController {
         this.authorDTOMapper = authorDTOMapper;
         this.bookImportMapper = bookImportMapper;
         this.authorImportMapper = authorImportMapper;
+        this.publisherImportMapper = publisherImportMapper;
     }
 
     /**
@@ -106,8 +110,8 @@ public class UpdateController {
     }
 
     private List<Publisher> getPublishers() {
-        return importData.importPublishers().stream().map(publisherPOJO ->
-                mapper.map(publisherPOJO, Publisher.class)).collect(Collectors.toList());
+        return importData.importPublishers().stream().
+                map(publisherImportMapper::mapPublisherPOJOToPublisher).collect(Collectors.toList());
     }
 
     private List<Author> getAuthors() {

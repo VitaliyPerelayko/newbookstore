@@ -1,8 +1,12 @@
 package com.intexsoft.service.entityservice.impl;
 
+import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Review;
+import com.intexsoft.dao.model.User;
 import com.intexsoft.dao.repository.ReviewRepository;
+import com.intexsoft.service.entityservice.BookService;
 import com.intexsoft.service.entityservice.ReviewService;
+import com.intexsoft.service.entityservice.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +18,13 @@ import java.util.Optional;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final BookService bookService;
+    private final UserService userService;
 
-    public ReviewServiceImpl(ReviewRepository reviewRepository) {
+    public ReviewServiceImpl(ReviewRepository reviewRepository, BookService bookService, UserService userService) {
         this.reviewRepository = reviewRepository;
+        this.bookService = bookService;
+        this.userService = userService;
     }
 
     /**
@@ -28,7 +36,10 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<Review> findByBookAndUser(Long bookId, Long userId) {
-        return reviewRepository.findAllByBookAndUserOrderByTime(bookId, userId);
+        Book book = bookService.findById(bookId);
+        User user = userService.findById(userId).orElseThrow(() ->
+                new IllegalStateException("User with the given id wasn't found in database"));
+        return reviewRepository.findAllByBookAndUserOrderByTime(book, user);
     }
 
     /**
@@ -39,7 +50,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<Review> findAllByBook(Long bookId) {
-        return reviewRepository.findAllByBookOrderByTime(bookId);
+        Book book = bookService.findById(bookId);
+        return reviewRepository.findAllByBookOrderByTime(book);
     }
 
     /**
@@ -50,7 +62,9 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<Review> findAllByUser(Long userId) {
-        return reviewRepository.findAllByUserOrderByTime(userId);
+        User user = userService.findById(userId).orElseThrow(() ->
+                new IllegalStateException("User with the given id wasn't found in database"));
+        return reviewRepository.findAllByUserOrderByTime(user);
     }
 
     /**
@@ -106,6 +120,4 @@ public class ReviewServiceImpl implements ReviewService {
             throw new IllegalStateException(message);
         }
     }
-
-
 }

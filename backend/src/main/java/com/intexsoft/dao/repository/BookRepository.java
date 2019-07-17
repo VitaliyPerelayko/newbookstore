@@ -1,8 +1,8 @@
 package com.intexsoft.dao.repository;
 
 import com.intexsoft.dao.model.Book;
-import com.intexsoft.web.dto.response.BookResponseShortVersionDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -28,7 +28,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      *
      * @return all books ordered by publish date
      */
-    @Query("FROM Book book JOIN FETCH book.reviews ORDER BY book.publishDate")
+    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.reviews ORDER BY book.publishDate")
     List<Book> findAllOrderedByDate();
 
     /**
@@ -52,6 +52,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      * @param id     id of book
      * @param number new number of book
      */
+    @Modifying
     @Query("UPDATE Book book SET book.number = :number WHERE book.id = :id")
     void insertNumberOfBooks(@Param("id") Long id, @Param("number") Short number);
 
@@ -60,11 +61,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      *
      * @return List of books
      */
-    @Query("FROM Book book JOIN FETCH book.reviews")
+    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.reviews")
     List<Book> findAllWithReviews();
 
     /**
      * find id of book with the highest average rating
+     *
      * @return id
      */
     @Query(nativeQuery = true, value =

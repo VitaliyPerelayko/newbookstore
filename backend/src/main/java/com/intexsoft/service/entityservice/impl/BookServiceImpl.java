@@ -3,8 +3,6 @@ package com.intexsoft.service.entityservice.impl;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.repository.BookRepository;
 import com.intexsoft.service.entityservice.BookService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +17,6 @@ import java.util.Optional;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
-    private final Logger LOGGER = LogManager.getLogger(BookServiceImpl.class);
 
     public BookServiceImpl(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -64,9 +61,9 @@ public class BookServiceImpl implements BookService {
      * @return book
      */
     @Override
-    public Book findByTheHighestRating(){
-        Long id = bookRepository.findIdOfBookWithTheHighestRating();
-        if (id==null){
+    public Book findByTheHighestRating() {
+        Long id = bookRepository.findBookIdWhereMaxAvgRating();
+        if (id == null) {
             throw new IllegalStateException("There aren't any books with review");
         }
         return findById(id);
