@@ -9,6 +9,7 @@ import com.intexsoft.web.dto.request.ReviewRequestDTO;
 import com.intexsoft.web.dto.response.ReviewResponseDTO;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 @Service
@@ -34,7 +35,7 @@ public class ReviewDTOMapper {
         return review;
     }
 
-    public ReviewResponseDTO mapReviewToReviewResponseDTO(Review review){
+    public ReviewResponseDTO mapReviewToReviewResponseDTO(@Valid Review review){
         User user = review.getUser();
         Book book = review.getBook();
         ReviewResponseDTO reviewResponseDTO = new ReviewResponseDTO();

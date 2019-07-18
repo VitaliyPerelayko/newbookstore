@@ -6,8 +6,10 @@ import com.intexsoft.service.entityservice.BookService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -53,6 +55,36 @@ public class BookServiceImpl implements BookService {
     public Book findById(Long id) {
         return bookRepository.findBookById(id).orElseThrow(() ->
                 new RuntimeException("Book with the given id doesn't exist"));
+    }
+
+    /**
+     * finds book with lazy (authors, publishers, reviews) by it's id
+     *
+     * @param id id of book
+     * @return book with the given id
+     */
+    @Override
+    public Book findByIdLazy(Long id){
+        return bookRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Book with the given id doesn't exist"));
+    }
+
+    /**
+     * I use this method in controllers: I set reference to the entity instead of real entity, when map RequestDTO
+     * object to real object.
+     *
+     * Returns a reference to the entity with the given identifier. Depending on how the JPA persistence provider is
+     * implemented this is very likely to always return an instance and throw an
+     * {@link javax.persistence.EntityNotFoundException} on first access. Some of them will reject invalid identifiers
+     * immediately.
+     *
+     * @param id must not be {@literal null}.
+     * @return a reference to the entity with the given identifier.
+     * @see EntityManager#getReference(Class, Object) for details on when an exception is thrown.
+     */
+    @Override
+    public Book getOne(Long id){
+        return bookRepository.getOne(id);
     }
 
     /**
@@ -124,7 +156,7 @@ public class BookServiceImpl implements BookService {
     /**
      * Save all entities from List
      * (use batching)
-     * (this method is used for save imported data)
+     * (this method is used for saveAndUpdate imported data)
      *
      * @param books List of books
      * @return List of saved books
@@ -158,14 +190,14 @@ public class BookServiceImpl implements BookService {
     }
 
     /**
-     * Insert new number of books to the book with the given id
+     * Insert new number of books to the book in database with the given id
      *
      * @param id     id of book
      * @param number new number of book
      */
     @Transactional
     @Override
-    public void setNumberOfBooks(Long id, Short number) {
+    public void setNumberOfBook(Long id, Short number) {
         validate(number < 0, "Error. Number of books must be positive");
         isExist(id);
         bookRepository.insertNumberOfBooks(id, number);

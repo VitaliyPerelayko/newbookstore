@@ -79,7 +79,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     /**
-     * save the given review
+     * saveAndUpdate the given review
      *
      * @param review review
      * @return saved review

@@ -39,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/books/**", "/authors/**", "/publishers/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/reviews/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/reviews/**","/orders/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().hasRole("ADMIN");
         http.addFilterBefore(
                 new TokenFilter(userDetailsService, tokenService), UsernamePasswordAuthenticationFilter.class);

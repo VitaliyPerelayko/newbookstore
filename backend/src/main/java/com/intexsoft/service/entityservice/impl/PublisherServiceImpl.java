@@ -102,7 +102,7 @@ public class PublisherServiceImpl implements PublisherService {
     /**
      * Save all entities from List
      * (use batching)
-     * (this method is used for save imported data)
+     * (this method is used for saveAndUpdate imported data)
      *
      * @param publishers List of publishers
      * @return List of saved publishers

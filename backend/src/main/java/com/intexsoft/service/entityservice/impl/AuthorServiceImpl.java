@@ -6,6 +6,7 @@ import com.intexsoft.service.entityservice.AuthorService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,24 @@ public class AuthorServiceImpl implements AuthorService {
         validate(!author.isPresent(),
                 "error.author.id.notExist");
         return author.get();
+    }
+
+    /**
+     * I use this method in controllers: I set reference to the entity instead of real entity, when map RequestDTO
+     * object to real object.
+     *
+     * Returns a reference to the entity with the given identifier. Depending on how the JPA persistence provider is
+     * implemented this is very likely to always return an instance and throw an
+     * {@link javax.persistence.EntityNotFoundException} on first access. Some of them will reject invalid identifiers
+     * immediately.
+     *
+     * @param id must not be {@literal null}.
+     * @return a reference to the entity with the given identifier.
+     * @see EntityManager#getReference(Class, Object) for details on when an exception is thrown.
+     */
+    @Override
+    public Author getById(Long id){
+        return authorRepository.getOne(id);
     }
 
     /**
@@ -102,7 +121,7 @@ public class AuthorServiceImpl implements AuthorService {
     /**
      * Save all entities from List
      * (use batching)
-     * (this method is used for save imported data)
+     * (this method is used for saveAndUpdate imported data)
      *
      * @param authors List of authors
      * @return List of saved authors

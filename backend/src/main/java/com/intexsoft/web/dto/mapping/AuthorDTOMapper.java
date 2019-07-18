@@ -4,6 +4,7 @@ import com.intexsoft.dao.model.Author;
 import com.intexsoft.web.dto.AuthorDTO;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 @Service
@@ -18,7 +19,7 @@ public class AuthorDTOMapper {
         return author;
     }
 
-    public AuthorDTO mapAuthorToAuthorDTO(Author author) {
+    public AuthorDTO mapAuthorToAuthorDTO(@Valid Author author) {
         AuthorDTO authorDTO = new AuthorDTO();
         authorDTO.setId(author.getId());
         authorDTO.setName(author.getName());

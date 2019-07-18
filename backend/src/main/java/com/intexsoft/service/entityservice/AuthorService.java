@@ -15,6 +15,8 @@ public interface AuthorService {
 
     Author findById(Long id);
 
+    Author getById(Long id);
+
     Optional<Author> findByName(String name);
 
     boolean existByName(String name);

@@ -4,6 +4,7 @@ import com.intexsoft.dao.model.Book;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -15,6 +16,10 @@ public interface BookService {
     Book findById(Long id);
 
     List<Book> findAllSortByDate();
+
+    Book findByIdLazy(Long id);
+
+    Book getOne(Long id);
 
     Book findByTheHighestRating();
 
@@ -35,7 +40,7 @@ public interface BookService {
     Book update(Book book);
 
     @Transactional
-    void setNumberOfBooks(Long id, Short number);
+    void setNumberOfBook(Long id, Short number);
 
     @Transactional
     void delete(Book book);

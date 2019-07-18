@@ -52,6 +52,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Review> reviews;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders;
+
     public User(String name, String surname, String phone, String e_mail, String username, String password,
     Set<Role> roles) {
         this.name = name;

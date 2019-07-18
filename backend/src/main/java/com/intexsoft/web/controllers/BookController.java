@@ -60,7 +60,6 @@ public class BookController {
         return ResponseEntity.ok(bookDTOList.sorted(new CompareByRating()).collect(Collectors.toList()));
     }
 
-
     @GetMapping("/rating/{param}")
     public ResponseEntity<List<BookResponseShortVersionDTO>> getAllOrderedByRatingHigherThan(
             @PathVariable final Byte param) {
@@ -134,7 +133,7 @@ public class BookController {
         if (number < 0) {
             throw new IllegalArgumentException("Number of books must be positive");
         }
-        bookService.setNumberOfBooks(id, number);
+        bookService.setNumberOfBook(id, number);
     }
 
     /**

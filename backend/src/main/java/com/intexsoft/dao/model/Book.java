@@ -40,7 +40,7 @@ public class Book {
     @NotNull(message = "Publish date of book must be not null")
     private LocalDate publishDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "publisher", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Publisher of book must be mot null")
     @Convert
@@ -61,6 +61,9 @@ public class Book {
 
     @OneToMany(mappedBy = "book")
     private Set<Review> reviews;
+
+    @OneToMany(mappedBy = "book")
+    private Set<OrderProducts> orderProducts;
 
     public Book(String code, String name, String description, Set<Author> authors, LocalDate publishDate,
                 Publisher publisher, BigDecimal price, Category category, Short number) {

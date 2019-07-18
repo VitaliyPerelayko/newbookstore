@@ -1,5 +1,6 @@
 package com.intexsoft.web.dto.mapping;
 
+import com.intexsoft.dao.model.Author;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.model.Category;
 import com.intexsoft.dao.model.Review;
@@ -9,10 +10,13 @@ import com.intexsoft.web.dto.PublisherDTO;
 import com.intexsoft.web.dto.request.BookRequestDTO;
 import com.intexsoft.web.dto.response.AuthorResponseInBookDTO;
 import com.intexsoft.web.dto.response.BookResponseDTO;
+import com.intexsoft.web.dto.response.BookResponseForOrderDTO;
 import com.intexsoft.web.dto.response.BookResponseShortVersionDTO;
 import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,7 +36,12 @@ public class BookDTOMapper {
     }
 
 
-    public BookResponseDTO mapBookToBookResponseDTO(Book book) {
+    /**
+     * @param book book
+     * @return BookResponseDTO
+     * @apiNote if book hasn't reviews rating will be null
+     */
+    public BookResponseDTO mapBookToBookResponseDTO(@Valid Book book) {
         BookResponseDTO bookResponseDTO = new BookResponseDTO();
         bookResponseDTO.setId(book.getId());
         bookResponseDTO.setName(book.getName());
@@ -45,6 +54,7 @@ public class BookDTOMapper {
         bookResponseDTO.setPublisher(mapper.map(book.getPublisher(), PublisherDTO.class));
         bookResponseDTO.setPublishDate(book.getPublishDate());
         bookResponseDTO.setNumber(book.getNumber());
+        bookResponseDTO.setAvgRating(computeAvgRating(book.getReviews()));
         return bookResponseDTO;
     }
 
@@ -69,24 +79,36 @@ public class BookDTOMapper {
     }
 
     /**
-     * @apiNote
-     * if book hasn't reviews rating will be null
-     *
      * @param book book
      * @return BookResponseShortVersionDTO
      */
-    public BookResponseShortVersionDTO mapBookToBookResponseShortVersionDTO(Book book) {
+    public BookResponseShortVersionDTO mapBookToBookResponseShortVersionDTO(@Valid Book book) {
         BookResponseShortVersionDTO bookResponseShortVersionDTO =
                 mapper.map(book, BookResponseShortVersionDTO.class);
-        Set<Review> reviewList = book.getReviews();
-        int size = reviewList.size();
-        if (size != 0){
-            float average = (float) reviewList.stream().mapToInt(review ->
-                    review.getRating().intValue()).summaryStatistics().getAverage();
-            bookResponseShortVersionDTO.setRating(average);
-        } else{
-            bookResponseShortVersionDTO.setRating(null);
-        }
+        bookResponseShortVersionDTO.
+                setAuthorNames(getAuthorsNamesFromAuthors(book.getAuthors()));
+        bookResponseShortVersionDTO.setRating(computeAvgRating(book.getReviews()));
         return bookResponseShortVersionDTO;
+    }
+
+    public BookResponseForOrderDTO mapBookToBookResponseForOrderDTO(@Valid Book book){
+        BookResponseForOrderDTO bookResponseForOrderDTO =
+                mapper.map(book, BookResponseForOrderDTO.class);
+        bookResponseForOrderDTO.setAuthorNames(getAuthorsNamesFromAuthors(book.getAuthors()));
+        return bookResponseForOrderDTO;
+    }
+
+    private List<String> getAuthorsNamesFromAuthors(Set<Author> authorList){
+        return authorList.stream().map(Author::getName).collect(Collectors.toList());
+    }
+
+    private Float computeAvgRating(Set<Review> reviews) {
+        int size = reviews.size();
+        if (size != 0) {
+            return (float) reviews.stream().mapToInt(review ->
+                    review.getRating().intValue()).summaryStatistics().getAverage();
+        } else {
+            return null;
+        }
     }
 }

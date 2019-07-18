@@ -36,6 +36,8 @@ public class BookResponseDTO {
 
     private Short number;
 
+    private Float avgRating;
+
     public Long getId() {
         return id;
     }
@@ -114,5 +116,13 @@ public class BookResponseDTO {
 
     public void setNumber(Short number) {
         this.number = number;
+    }
+
+    public Float getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(Float avgRating) {
+        this.avgRating = avgRating;
     }
 }

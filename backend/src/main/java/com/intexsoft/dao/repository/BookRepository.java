@@ -20,7 +20,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      * @param id id of book
      * @return book with the given id
      */
-    @Query("FROM Book book JOIN FETCH book.authors JOIN FETCH book.publisher WHERE book.id = :id")
+    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.authors JOIN FETCH book.publisher JOIN FETCH book.reviews WHERE book.id = :id")
     Optional<Book> findBookById(@Param("id") Long id);
 
     /**
@@ -28,7 +28,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      *
      * @return all books ordered by publish date
      */
-    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.reviews ORDER BY book.publishDate")
+    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.reviews JOIN FETCH book.authors ORDER BY book.publishDate")
     List<Book> findAllOrderedByDate();
 
     /**
@@ -43,7 +43,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      * @param code code of book
      * @return book with the given code
      */
-    @Query("FROM Book book JOIN FETCH book.authors JOIN FETCH book.publisher WHERE book.code = :code")
+    @Query("FROM Book book WHERE book.code = :code")
     Book findBookByCode(@Param("code") String code);
 
     /**
@@ -61,7 +61,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
      *
      * @return List of books
      */
-    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.reviews")
+    @Query("SELECT DISTINCT book FROM Book book JOIN FETCH book.reviews JOIN FETCH book.authors")
     List<Book> findAllWithReviews();
 
     /**
