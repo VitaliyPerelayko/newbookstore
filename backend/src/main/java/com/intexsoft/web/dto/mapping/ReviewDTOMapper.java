@@ -26,12 +26,10 @@ public class ReviewDTOMapper {
     public Review mapReviewRequestDTOtoReview(ReviewRequestDTO requestDTO){
         Review review = new Review();
         review.setId(requestDTO.getId());
-        review.setBook(bookService.findById(requestDTO.getBookId()));
+        review.setBook(bookService.getOne(requestDTO.getBookId()));
         review.setComment(requestDTO.getComment());
         review.setRating(requestDTO.getRating());
-        review.setUser(userService.findById(requestDTO.getUserId()).orElseThrow(
-                () -> new RuntimeException("User wasn't found in database by id")
-        ));
+        review.setUser(userService.getOne(requestDTO.getUserId()));
         return review;
     }
 

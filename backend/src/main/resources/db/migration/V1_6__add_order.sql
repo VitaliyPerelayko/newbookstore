@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS books_order
     is_paid         BOOLEAN       NOT NULL,
     is_closed       BOOLEAN       NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_reviews_user_id
+    CONSTRAINT fk_order_user_id
         FOREIGN KEY (user_id)
             REFERENCES users (id)
             ON DELETE NO ACTION

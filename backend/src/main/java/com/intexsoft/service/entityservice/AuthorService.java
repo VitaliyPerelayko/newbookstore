@@ -2,6 +2,7 @@ package com.intexsoft.service.entityservice;
 
 
 import com.intexsoft.dao.model.Author;
+import com.intexsoft.dao.model.Book;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.Optional;
  */
 public interface AuthorService {
     List<Author> findAll();
+
+    List<Author> findAuthorsOfBook(Book book);
 
     Author findById(Long id);
 

@@ -3,6 +3,7 @@ package com.intexsoft.service.entityservice.impl;
 import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.repository.BookRepository;
 import com.intexsoft.service.entityservice.BookService;
+import io.jsonwebtoken.lang.Assert;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -201,6 +202,35 @@ public class BookServiceImpl implements BookService {
         validate(number < 0, "Error. Number of books must be positive");
         isExist(id);
         bookRepository.insertNumberOfBooks(id, number);
+    }
+
+    /**
+     * add some short value to number in the book with the given id
+     *
+     * @param id     id of book
+     * @param number value that will be added
+     */
+    @Transactional
+    @Override
+    public void setNumberOfBookPlus(Long id, Short number) {
+        validate(number < 0, "Error. Number of books must be positive");
+        isExist(id);
+        bookRepository.insertNumberOfBooksPlus(id, number);
+    }
+
+    /**
+     * subtract some short value from number in the book with the given id
+     *
+     * @param id     id of book
+     * @param number value that will be subtracted
+     */
+    @Transactional
+    @Override
+    public void setNumberOfBookSubtract(Long id, Short number) {
+        validate(number < 0, "Error. Number of books must be positive");
+        Assert.state(findByIdLazy(id).getNumber() > number,
+                "Error. Number of books in database less than number which you try to subtract");
+        bookRepository.insertNumberOfBooksSubtract(id, number);
     }
 
     /**

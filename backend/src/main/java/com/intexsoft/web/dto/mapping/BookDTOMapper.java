@@ -16,6 +16,7 @@ import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -27,7 +28,6 @@ public class BookDTOMapper {
     private final Mapper mapper;
     private final AuthorService authorService;
     private final PublisherService publisherService;
-
 
     public BookDTOMapper(Mapper mapper, AuthorService authorService, PublisherService publisherService) {
         this.mapper = mapper;
@@ -81,6 +81,7 @@ public class BookDTOMapper {
     /**
      * @param book book
      * @return BookResponseShortVersionDTO
+     * @apiNote if book hasn't reviews rating will be null
      */
     public BookResponseShortVersionDTO mapBookToBookResponseShortVersionDTO(@Valid Book book) {
         BookResponseShortVersionDTO bookResponseShortVersionDTO =
@@ -91,14 +92,16 @@ public class BookDTOMapper {
         return bookResponseShortVersionDTO;
     }
 
-    public BookResponseForOrderDTO mapBookToBookResponseForOrderDTO(@Valid Book book){
+    public BookResponseForOrderDTO mapBookToBookResponseForOrderDTO(@Valid Book book) {
         BookResponseForOrderDTO bookResponseForOrderDTO =
                 mapper.map(book, BookResponseForOrderDTO.class);
-        bookResponseForOrderDTO.setAuthorNames(getAuthorsNamesFromAuthors(book.getAuthors()));
+        bookResponseForOrderDTO.setAuthorNames(getAuthorsNamesFromAuthors(
+                authorService.findAuthorsOfBook(book)
+        ));
         return bookResponseForOrderDTO;
     }
 
-    private List<String> getAuthorsNamesFromAuthors(Set<Author> authorList){
+    private List<String> getAuthorsNamesFromAuthors(Collection<Author> authorList) {
         return authorList.stream().map(Author::getName).collect(Collectors.toList());
     }
 

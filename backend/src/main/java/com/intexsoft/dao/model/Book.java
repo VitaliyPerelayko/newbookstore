@@ -59,7 +59,7 @@ public class Book {
     @PositiveOrZero(message = "Number of books must be positive")
     private Short number;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
     private Set<Review> reviews;
 
     @OneToMany(mappedBy = "book")

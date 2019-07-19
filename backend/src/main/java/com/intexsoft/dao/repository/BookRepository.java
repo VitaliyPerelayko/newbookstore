@@ -47,7 +47,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     Book findBookByCode(@Param("code") String code);
 
     /**
-     * Insert new number of books to the book with the given id
+     * Insert new number to the book with the given id
      *
      * @param id     id of book
      * @param number new number of book
@@ -55,6 +55,26 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Modifying
     @Query("UPDATE Book book SET book.number = :number WHERE book.id = :id")
     void insertNumberOfBooks(@Param("id") Long id, @Param("number") Short number);
+
+    /**
+     * add some short value to number in the book with the given id
+     *
+     * @param id     id of book
+     * @param number value that will be added
+     */
+    @Modifying
+    @Query("UPDATE Book book SET book.number = book.number + :number WHERE book.id = :id")
+    void insertNumberOfBooksPlus(@Param("id") Long id, @Param("number") Short number);
+
+    /**
+     * subtract some short value from number in the book with the given id
+     *
+     * @param id     id of book
+     * @param number value that will be subtracted
+     */
+    @Modifying
+    @Query("UPDATE Book book SET book.number = book.number - :number WHERE book.id = :id")
+    void insertNumberOfBooksSubtract(@Param("id") Long id, @Param("number") Short number);
 
     /**
      * find all books with it's rating

@@ -31,7 +31,7 @@ public class Review {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Field book in the review entity must be not null. Review must be associated with some book.")
     private Book book;

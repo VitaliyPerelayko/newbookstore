@@ -1,6 +1,7 @@
 package com.intexsoft.service.entityservice.impl;
 
 import com.intexsoft.dao.model.Author;
+import com.intexsoft.dao.model.Book;
 import com.intexsoft.dao.repository.AuthorRepository;
 import com.intexsoft.service.entityservice.AuthorService;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,17 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public List<Author> findAll() {
         return authorRepository.findAll();
+    }
+
+    /**
+     * find authors of the given book
+     *
+     * @param book book
+     * @return list of authors
+     */
+    @Override
+    public List<Author> findAuthorsOfBook(Book book){
+       return authorRepository.findAllByBooks(book);
     }
 
     /**

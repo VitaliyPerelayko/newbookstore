@@ -3,7 +3,9 @@ package com.intexsoft.web.dto.mapping;
 import com.intexsoft.dao.model.Order;
 import com.intexsoft.dao.model.OrderProducts;
 import com.intexsoft.dao.model.User;
+import com.intexsoft.service.entityservice.BookService;
 import com.intexsoft.service.entityservice.UserService;
+import com.intexsoft.web.dto.request.BookRequestForOrderDTO;
 import com.intexsoft.web.dto.request.OrderRequestDTO;
 import com.intexsoft.web.dto.response.BookResponseForOrderDTO;
 import com.intexsoft.web.dto.response.OrderResponseDTO;
@@ -17,10 +19,12 @@ public class OrderDTOMapper {
 
     private final BookDTOMapper bookDTOMapper;
     private final UserService userService;
+    private final BookService bookService;
 
-    public OrderDTOMapper(BookDTOMapper bookDTOMapper, UserService userService) {
+    public OrderDTOMapper(BookDTOMapper bookDTOMapper, UserService userService, BookService bookService) {
         this.bookDTOMapper = bookDTOMapper;
         this.userService = userService;
+        this.bookService = bookService;
     }
 
     public OrderResponseDTO mapOrderToOrderResponseDTO(@Valid Order order) {
@@ -45,10 +49,18 @@ public class OrderDTOMapper {
         order.setId(orderRequestDTO.getId());
         order.setComment(orderRequestDTO.getComment());
         order.setDeliveryAddress(orderRequestDTO.getDeliveryAddress());
-        order.setUser(userService.findById(orderRequestDTO.getUserId()).orElseThrow(() ->
-                new IllegalStateException("User with the given id wasn't found in database")));
+        order.setUser(userService.getOne(orderRequestDTO.getUserId()));
         order.setTotalPrice(orderRequestDTO.getTotalPrice());
+        order.setOrderProducts(orderRequestDTO.getBooks().stream()
+                .map(this::mapBookRequestForOrderDTOToOrderProduct).collect(Collectors.toSet()));
         return order;
+    }
+
+    private OrderProducts mapBookRequestForOrderDTOToOrderProduct(BookRequestForOrderDTO bookR) {
+        OrderProducts orderProducts = new OrderProducts();
+        orderProducts.setBook(bookService.findByIdLazy(bookR.getBookId()));
+        orderProducts.setNumber(bookR.getNumber());
+        return orderProducts;
     }
 
     private BookResponseForOrderDTO mapOrderProductsToBookResponseForOrderDTO(@Valid OrderProducts products) {

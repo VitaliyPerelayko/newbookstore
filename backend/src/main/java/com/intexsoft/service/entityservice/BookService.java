@@ -40,7 +40,13 @@ public interface BookService {
     Book update(Book book);
 
     @Transactional
+    void setNumberOfBookPlus(Long id, Short number);
+
+    @Transactional
     void setNumberOfBook(Long id, Short number);
+
+    @Transactional
+    void setNumberOfBookSubtract(Long id, Short number);
 
     @Transactional
     void delete(Book book);

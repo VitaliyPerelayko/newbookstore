@@ -20,7 +20,7 @@ public class OrderProducts {
 
 
     @MapsId("orderId")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     @NotNull
     private Order order;
@@ -36,6 +36,10 @@ public class OrderProducts {
     }
 
     public OrderProducts() {
+    }
+
+    public OrderProductId getId() {
+        return id;
     }
 
     public Book getBook() {

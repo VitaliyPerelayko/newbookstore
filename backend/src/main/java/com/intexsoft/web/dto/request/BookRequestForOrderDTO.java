@@ -1,9 +1,13 @@
 package com.intexsoft.web.dto.request;
 
+import javax.validation.constraints.NotNull;
+
 public class BookRequestForOrderDTO {
 
+    @NotNull(message = "bookId in order must be not null")
     private Long bookId;
 
+    @NotNull(message = "number of books in order must be not null")
     private Short number;
 
     public Long getBookId() {

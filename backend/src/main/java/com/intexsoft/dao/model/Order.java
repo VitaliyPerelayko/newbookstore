@@ -32,7 +32,7 @@ public class Order {
     @Positive(message = "Orders's totalPrice can not be negative")
     private BigDecimal totalPrice;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @NotNull(message = "Order's field user must be not null. Order must belong to some user")
     private User user;
@@ -45,7 +45,7 @@ public class Order {
     @NotNull(message = "Order's field isClosed must be not null")
     private Boolean isClosed;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<OrderProducts> orderProducts;
 
     public Order(@Size(max = 150, message = "Number of characters in order's comment must be less than 150")
@@ -142,5 +142,9 @@ public class Order {
 
     public Set<OrderProducts> getOrderProducts() {
         return orderProducts;
+    }
+
+    public void setOrderProducts(Set<OrderProducts> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 }

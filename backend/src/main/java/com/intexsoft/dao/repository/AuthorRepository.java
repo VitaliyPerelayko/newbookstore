@@ -1,7 +1,10 @@
 package com.intexsoft.dao.repository;
 
 import com.intexsoft.dao.model.Author;
+import com.intexsoft.dao.model.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
 
@@ -18,4 +21,12 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
      * @return author with the given name
      */
     Author findAuthorByName(String name);
+
+    /**
+     * find authors of the given book
+     *
+     * @param book book
+     * @return list of authors
+     */
+    List<Author> findAllByBooks(Book book);
 }
