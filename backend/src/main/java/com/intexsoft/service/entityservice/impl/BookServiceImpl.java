@@ -228,7 +228,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void setNumberOfBookSubtract(Long id, Short number) {
         validate(number < 0, "Error. Number of books must be positive");
-        Assert.state(findByIdLazy(id).getNumber() > number,
+        Assert.state(findByIdLazy(id).getNumber() >= number,
                 "Error. Number of books in database less than number which you try to subtract");
         bookRepository.insertNumberOfBooksSubtract(id, number);
     }

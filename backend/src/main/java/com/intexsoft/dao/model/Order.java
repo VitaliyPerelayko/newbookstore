@@ -45,7 +45,7 @@ public class Order {
     @NotNull(message = "Order's field isClosed must be not null")
     private Boolean isClosed;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<OrderProducts> orderProducts;
 
     public Order(@Size(max = 150, message = "Number of characters in order's comment must be less than 150")

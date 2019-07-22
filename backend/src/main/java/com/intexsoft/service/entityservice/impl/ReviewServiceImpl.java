@@ -36,9 +36,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<Review> findByBookAndUser(Long bookId, Long userId) {
-        Book book = bookService.findById(bookId);
-        User user = userService.findById(userId).orElseThrow(() ->
-                new IllegalStateException("User with the given id wasn't found in database"));
+        Book book = bookService.getOne(bookId);
+        User user = userService.getOne(userId);
         return reviewRepository.findAllByBookAndUserOrderByTime(book, user);
     }
 
@@ -50,7 +49,7 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<Review> findAllByBook(Long bookId) {
-        Book book = bookService.findById(bookId);
+        Book book = bookService.getOne(bookId);
         return reviewRepository.findAllByBookOrderByTime(book);
     }
 
@@ -62,8 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<Review> findAllByUser(Long userId) {
-        User user = userService.findById(userId).orElseThrow(() ->
-                new IllegalStateException("User with the given id wasn't found in database"));
+        User user = userService.getOne(userId);
         return reviewRepository.findAllByUserOrderByTime(user);
     }
 

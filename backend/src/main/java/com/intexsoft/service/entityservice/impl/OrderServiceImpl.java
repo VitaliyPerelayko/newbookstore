@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
         final Order savedOrder = orderRepository.saveAndFlush(order);
         saveAllOrderProducts(order.getOrderProducts(), savedOrder).
                 forEach(bookService::setNumberOfBookSubtract);
-        return savedOrder;
+        return findById(savedOrder.getId());
     }
 
     @Override
@@ -52,9 +52,12 @@ public class OrderServiceImpl implements OrderService {
         Assert.state(order.getId() != null, "Order which is updated must has id");
         // change books in order
         Order updatingOrder = findById(order.getId());
+        final Set<OrderProducts> products = order.getOrderProducts();
+        order.setOrderProducts(null);
         final Order updatedOrder = orderRepository.saveAndFlush(order);
+        updatedOrder.setOrderProducts(products);
         changeBooksInOrder(updatingOrder, updatedOrder);
-        return updatedOrder;
+        return findById(updatedOrder.getId());
     }
 
     @Override

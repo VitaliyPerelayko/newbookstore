@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS order_has_books
         FOREIGN KEY (order_id)
             REFERENCES books_order (id)
             ON DELETE CASCADE
-            ON UPDATE CASCADE,
+            ON UPDATE NO ACTION,
     CONSTRAINT fk_ohb_book_id
         FOREIGN KEY (book_id)
             REFERENCES book (id)
