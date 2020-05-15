@@ -33,7 +33,7 @@
         <opencsv>4.6</opencsv>
 
         <dozer>5.5.1</dozer>
-        <jackson.core>2.9.8</jackson.core>
+        <jackson.core>2.11.0</jackson.core>
 
         <!-- Test -->
         <junit-runner>1.5.0</junit-runner>
