@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Dependencies -->
-        <org.spring.core>5.1.5.RELEASE</org.spring.core>
+        <org.spring.core>5.2.10.RELEASE</org.spring.core>
         <org.spring.data>2.1.5.RELEASE</org.spring.data>
 
         <javax.servlet>4.0.1</javax.servlet>
